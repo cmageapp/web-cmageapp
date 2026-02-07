@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PLT Suite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* =========================================
+           ESTILOS GENERALES (MENU OSCURO)
+           ========================================= */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0;
+            width: 100vw; min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header Fijo */
+        header {
+            background-color: #121212;
+            border-bottom: 1px solid #333;
+            height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px;
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+        }
+        header h1 { font-size: 1.1rem; margin: 0; font-weight: 600; }
+        .btn-back {
+            background: none; border: none; color: #4facfe; font-size: 1rem;
+            padding: 10px 15px 10px 0; cursor: pointer; visibility: hidden;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        /* Contenedor Principal */
+        #app-container { margin-top: 60px; width: 100%; height: calc(100vh - 60px); position: relative; }
+
+        /* Vistas */
+        .view-section { 
+            display: none; 
+            width: 100%; 
+            height: 100%; 
+            overflow-y: auto; 
+            padding-bottom: 40px;
+            background: #000; 
+        }
+        .view-section.active { display: block; animation: fadeIn 0.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Lista del Menú Principal */
+        .menu-list { list-style: none; padding: 0; margin: 0; }
+        .menu-item {
+            background-color: #000; padding: 20px 15px;
+            border-bottom: 1px solid #222;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .menu-item:active { background-color: #1a1a1a; }
+        .item-left { display: flex; align-items: center; gap: 15px; }
+        .item-number { font-weight: bold; color: #4facfe; font-size: 1.1rem; min-width: 25px; }
+        .item-text h3 { margin: 0; font-size: 1rem; color: white; }
+        .item-text p { margin: 4px 0 0 0; font-size: 0.8rem; color: #888; }
+        .arrow-icon { color: #444; }
+
+        /* =========================================
+           ESTILOS ESPECIFICOS DE LOS MODULOS (RMG/DMG)
+           ========================================= */
+        /* Variables Retro HP */
+        :root {
+            --hp-blue: #0000FF;
+            --hp-white: #FFFFFF;
+            --hp-grey: #e0e0e0;
+        }
+
+        .module-container {
+            width: 100%;
+            min-height: 100%;
+            background: #111;
+            display: flex; flex-direction: column;
+        }
+
+        /* --- ESTILOS RMG --- */
+        .retro-viewport {
+            background: var(--hp-white);
+            color: black;
+            display: flex; flex-direction: column;
+            border: 1px solid #333;
+            min-height: 400px;
+        }
+        .header-editor { 
+            background: var(--hp-blue); color: white; padding: 10px; 
+            text-align: center; font-weight: bold; font-size: 0.9rem;
+        }
+        canvas#matrixCanvas { 
+            width: 100%; height: auto; aspect-ratio: 1/1; 
+            display: block; margin: 0 auto; 
+            touch-action: none; /* Mejor respuesta tactil */
+        }
+        .footer-editor { 
+            background: #404040; display: flex; padding: 0; 
+            border-top: 1px solid #000;
+        }
+        .btn-menu { 
+            flex: 1; padding: 15px 5px; border: none; background: transparent; 
+            color: white; font-weight: bold; font-family: monospace; font-size: 0.9rem;
+            border-right: 1px solid #555; 
+        }
+        .btn-menu:active { background: #555; }
+
+        /* Resultados RMG */
+        #screen-result { display: none; flex-direction: column; padding: 20px; background: white; color: black; height: 100%; }
+        .main-ds { font-size: 1.4rem; font-family: serif; margin: 20px 0; color: #0000FF; font-weight: bold; }
+        .config-val { font-size: 0.9rem; color: #333; display: block; margin-bottom: 5px; }
+
+        /* --- ESTILOS DMG (Adaptados a Móvil) --- */
+        .dmg-app-container {
+            display: flex; flex-direction: column;
+            background: #fff;
+            color: black;
+            min-height: 100%;
+        }
+        .dmg-top-bar {
+            background: #222; color: #ddd; padding: 10px;
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #444;
+        }
+        .dmg-title { font-size: 0.9rem; width: 100%; margin-bottom: 10px; color: #aaa; }
+        .dmg-controls-wrapper { display: flex; gap: 15px; width: 100%; justify-content: space-around; }
+        
+        .ctrl-group { display: flex; flex-direction: column; align-items: center; }
+        .ctrl-label { font-size: 0.7rem; color: #888; margin-bottom: 3px; }
+        .ctrl-btn-group { display: flex; gap: 2px; }
+        .ctrl-btn-group button {
+            width: 30px; height: 30px; border: 1px solid #000; background: #e0e0e0;
+            font-weight: bold; font-size: 1rem;
+        }
+        .ctrl-val {
+            width: 30px; height: 30px; background: white; border: 1px solid black;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+        }
+
+        /* Cuerpo DMG Movil: Columna */
+        .dmg-body { display: flex; flex-direction: column; flex: 1; }
+        
+        /* Tabla */
+        .dmg-table-container { 
+            max-height: 250px; overflow-y: auto; 
+            border-bottom: 2px solid #000;
+        }
+        table#coordsTable { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        table#coordsTable th { background: #333; color: white; padding: 8px; position: sticky; top: 0; }
+        table#coordsTable td { border-bottom: 1px solid #ccc; padding: 0; height: 40px; }
+        
+        .dmg-input {
+            width: 100%; height: 100%; border: none; text-align: center; font-size: 1rem; background: transparent;
+        }
+        .dmg-input:focus { background: #e8f4fc; border: 2px solid #0000FF; }
+        .phase-cell { background: #f0f0f0; text-align: center; font-weight: bold; width: 50px; }
+
+        /* Grafico DMG */
+        .graph-box { height: 250px; position: relative; background: white; border-bottom: 1px solid #ccc; }
+        
+        /* Resultados DMG */
+        .dmg-results-box { padding: 15px; background: #E8F4FC; }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 1rem; }
+        .res-val-highlight { color: #008000; font-weight: bold; font-size: 1.2rem; }
+        .dmg-footer-btns { display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end; }
+        .retro-btn {
+            padding: 8px 16px; background: #ddd; border: 1px solid #999; font-weight: bold; border-radius: 4px;
+        }
+
+        /* Inputs Generales (Vista 1 y 2) */
+        .form-container { padding: 20px; }
+        .input-box { margin-bottom: 15px; }
+        .input-box label { display: block; color: #aaa; margin-bottom: 5px; }
+        .my-input {
+            width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: white;
+            border-radius: 6px; font-size: 1rem;
+        }
+        .btn-calc {
+            width: 100%; padding: 14px; background: #4facfe; color: white; border: none;
+            border-radius: 6px; font-size: 1rem; font-weight: bold; margin-top: 10px;
+        }
+        .result-simple { margin-top: 20px; background: #111; padding: 15px; border-radius: 6px; display: none; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <button id="btn-back" class="btn-back" onclick="goHome()">
+            <i class="fas fa-chevron-left"></i> Volver
+        </button>
+        <h1 id="page-title">Menú Principal</h1>
+        <div style="width: 60px;"></div>
+    </header>
+
+    <div id="app-container">
+
+        <div id="view-home" class="view-section active">
+            <ul class="menu-list">
+                <li class="menu-item" onclick="goTo('view-lc', 'Cálculo L-C')">
+                    <div class="item-left">
+                        <span class="item-number">1.</span>
+                        <div class="item-text">
+                            <h3>Cálculo L y C</h3>
+                            <p>Inductancia y Capacitancia</p>
+                        </div>
+                    </div>
+                    <span class="arrow-icon">›</span>
+                </li>
+
+                <li class="menu-item" onclick="goTo('view-res', 'Resistencia')">
+                    <div class="item-left">
+                        <span class="item-number">2.</span>
+                        <div class="item-text">
+                            <h3>Resistencia (R)</h3>
+                            <p>Skin y Temperatura</p>
+                        </div>
+                    </div>
+                    <span class="arrow-icon">›</span>
+                </li>
+
+                <li class="menu-item" onclick="goTo('view-rmg', 'Calculadora RMG')">
+                    <div class="item-left">
+                        <span class="item-number">3.</span>
+                        <div class="item-text">
+                            <h3>RMG</h3>
+                            <p>Radio Medio Geométrico (Matriz)</p>
+                        </div>
+                    </div>
+                    <span class="arrow-icon">›</span>
+                </li>
+
+                <li class="menu-item" onclick="goTo('view-dmg', 'Calculadora DMG')">
+                    <div class="item-left">
+                        <span class="item-number">4.</span>
+                        <div class="item-text">
+                            <h3>DMG</h3>
+                            <p>Distancia Media Geométrica</p>
+                        </div>
+                    </div>
+                    <span class="arrow-icon">›</span>
+                </li>
+            </ul>
+        </div>
+
+        <div id="view-lc" class="view-section">
+            <div class="form-container">
+                <div class="input-box">
+                    <label>Radio (r) [m]</label>
+                    <input type="number" id="lc_r" class="my-input" placeholder="0.012">
+                </div>
+                <div class="input-box">
+                    <label>Distancia (D) [m]</label>
+                    <input type="number" id="lc_d" class="my-input" placeholder="5.0">
+                </div>
+                <button class="btn-calc" onclick="calcLC()">CALCULAR</button>
+                <div id="res-lc" class="result-simple">
+                    <p style="color:#aaa; margin:0">Inductancia:</p>
+                    <h2 id="out_L" style="margin:5px 0 15px; color:#4facfe">--</h2>
+                    <p style="color:#aaa; margin:0">Capacitancia:</p>
+                    <h2 id="out_C" style="margin:5px 0 0; color:#4facfe">--</h2>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-res" class="view-section">
+            <div class="form-container">
+                <p>Módulo de resistencia en construcción.</p>
+            </div>
+        </div>
+
+        <div id="view-rmg" class="view-section">
+            <div class="module-container">
+                <div id="screen-editor" class="retro-viewport" style="display:flex;">
+                    <div class="header-editor"><span id="headerTitle">Modo Rectangular</span></div>
+                    <canvas id="matrixCanvas" width="600" height="600"></canvas>
+                    
+                    <div class="footer-editor">
+                        <button class="btn-menu" onclick="toggleMode()">MODO</button>
+                        <button class="btn-menu" style="color: yellow;" onclick="resetMatrix()">RESET</button>
+                        <button class="btn-menu" style="color: #00ff00;" onclick="calcularGMR()">CALC</button>
+                    </div>
+                </div>
+
+                <div id="screen-result">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="margin:0; color:#0000FF">Resultados</h3>
+                        <canvas id="miniGeoCanvas" width="80" height="80"></canvas>
+                    </div>
+                    <hr style="width:100%; border:0; border-top:1px solid #ccc; margin:15px 0;">
+                    
+                    <span class="label-blue" style="color:#0000FF; font-weight:bold;">RMG Calculado:</span>
+                    <span class="main-ds" id="val_ds">Ds = ---</span>
+                    
+                    <div style="margin-top:20px;">
+                        <span class="config-val" id="val_hilos">Hilos: 0</span>
+                        <span class="config-val">Ref: radio del hilo (r)</span>
+                    </div>
+
+                    <div style="margin-top:auto; display:flex; gap:10px;">
+                         <button class="retro-btn" style="flex:1; background:#444; color:white;" onclick="volverEditor()">VOLVER</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-dmg" class="view-section">
+            <div class="dmg-app-container" id="dmgContainer">
+                
+                <div class="dmg-top-bar">
+                    <div class="dmg-title">Configuración de Fases</div>
+                    <div class="dmg-controls-wrapper">
+                        <div class="ctrl-group">
+                            <span class="ctrl-label">Fases</span>
+                            <div class="ctrl-btn-group">
+                                <button onclick="changePhases(-1)">-</button>
+                                <span id="disp_nph" class="ctrl-val">3</span>
+                                <button onclick="changePhases(1)">+</button>
+                            </div>
+                        </div>
+                        <div class="ctrl-group">
+                            <span class="ctrl-label">Sel Fase</span>
+                            <div class="ctrl-btn-group">
+                                <button onclick="changeSelPhase(-1)">-</button>
+                                <span id="disp_sel" class="ctrl-val" style="background:#FFFF00; color:black;">1</span>
+                                <button onclick="changeSelPhase(1)">+</button>
+                            </div>
+                        </div>
+                        <div class="ctrl-group">
+                            <span class="ctrl-label">Conduc.</span>
+                            <div class="ctrl-btn-group">
+                                <button onclick="changeSubCond(-1)">-</button>
+                                <span id="disp_nsub" class="ctrl-val">1</span>
+                                <button onclick="changeSubCond(1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dmg-body">
+                    <div class="dmg-table-container">
+                        <table id="coordsTable">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">Fase</th>
+                                    <th>Pos X</th>
+                                    <th>Pos Y</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coordsBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="graph-box">
+                        <canvas id="dmgCanvas" width="300" height="250" style="width:100%; height:100%; display:block;"></canvas>
+                    </div>
+
+                    <div class="dmg-results-box">
+                        <div class="res-row">
+                            <span>DMG Teórico:</span>
+                            <span id="res_geom">---</span>
+                        </div>
+                        <div class="res-row">
+                            <span>DMG Equiv:</span>
+                            <span id="res_equiv" class="res-val-highlight">---</span>
+                        </div>
+                        <div class="dmg-footer-btns">
+                            <button class="retro-btn" onclick="toggleLabels()">Etiquetas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    // ==========================================
+    // 1. SISTEMA DE NAVEGACION
+    // ==========================================
+    function goTo(viewId, title) {
+        // Ocultar todas
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        
+        // Mostrar seleccionada
+        const target = document.getElementById(viewId);
+        target.classList.add('active');
+
+        // Config Header
+        document.getElementById('page-title').innerText = title;
+        document.getElementById('btn-back').style.visibility = 'visible';
+
+        // Inicializar Modulos si es necesario (Fix Canvas Size)
+        if(viewId === 'view-rmg') setTimeout(initRMGCanvas, 50);
+        if(viewId === 'view-dmg') setTimeout(calculateDMG, 50);
+
+        window.scrollTo(0,0);
+    }
+
+    function goHome() {
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-home').classList.add('active');
+        document.getElementById('page-title').innerText = "Menú Principal";
+        document.getElementById('btn-back').style.visibility = 'hidden';
+    }
+
+    // ==========================================
+    // 2. LOGICA MODULO SIMPLE (L-C)
+    // ==========================================
+    function calcLC() {
+        let r = parseFloat(document.getElementById('lc_r').value);
+        let d = parseFloat(document.getElementById('lc_d').value);
+        if(!r || !d) return alert("Datos inválidos");
+        
+        let L = 0.2 * Math.log(d/r);
+        let C = 0.0556 / Math.log(d/r);
+        
+        document.getElementById('out_L').innerText = L.toFixed(4) + " mH/km";
+        document.getElementById('out_C').innerText = C.toFixed(4) + " µF/km";
+        document.getElementById('res-lc').style.display = 'block';
+    }
+
+    // ==========================================
+    // 3. LOGICA MODULO RMG (Adaptada)
+    // ==========================================
+    const ROWS = 7, COLS = 7;
+    let matrix = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+    matrix[3][3] = 1; // Centro activo por defecto
+    let isHexMode = false;
+
+    const cvRMG = document.getElementById('matrixCanvas');
+    const ctxRMG = cvRMG.getContext('2d');
+    const cvMini = document.getElementById('miniGeoCanvas');
+    const ctxMini = cvMini.getContext('2d');
+
+    function initRMGCanvas() {
+        // Redimensionar canvas al tamaño real del contenedor movil
+        const rect = cvRMG.getBoundingClientRect();
+        cvRMG.width = rect.width;
+        cvRMG.height = rect.width; // Cuadrado
+        drawRMG();
+    }
+
+    function drawRMG() {
+        const w = cvRMG.width;
+        const h = cvRMG.height;
+        ctxRMG.fillStyle = "white"; ctxRMG.fillRect(0,0,w,h);
+        
+        const spacing = w / 8; 
+        const radius = spacing * 0.4;
+        const offsetX = w / 2;
+        const offsetY = h / 2;
+
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 0; j < COLS; j++) {
+                let dx = (j - 3) * spacing;
+                let dy = (i - 3) * spacing;
+                
+                if (isHexMode) {
+                    let off = ((i % 2) === 0) ? 0.5 : 0;
+                    dx = (j - 3 + off) * spacing * 0.9;
+                    dy = (i - 3) * (spacing * 0.866);
+                }
+
+                let px = offsetX + dx;
+                let py = offsetY + dy;
+
+                ctxRMG.beginPath(); 
+                ctxRMG.arc(px, py, radius, 0, Math.PI*2);
+                
+                if (matrix[i][j] === 1) {
+                    ctxRMG.strokeStyle = "blue"; ctxRMG.lineWidth = 3; ctxRMG.stroke();
+                    ctxRMG.beginPath(); ctxRMG.arc(px, py, radius*0.3, 0, Math.PI*2); ctxRMG.fillStyle="blue"; ctxRMG.fill();
+                } else {
+                    ctxRMG.strokeStyle = "#ddd"; ctxRMG.lineWidth = 1; ctxRMG.stroke();
+                }
+            }
+        }
+    }
+
+    // Interacción Táctil/Click RMG
+    cvRMG.addEventListener('click', function(e) {
+        const rect = cvRMG.getBoundingClientRect();
+        const scaleX = cvRMG.width / rect.width;
+        const scaleY = cvRMG.height / rect.height;
+        const mx = (e.clientX - rect.left) * scaleX;
+        const my = (e.clientY - rect.top) * scaleY;
+
+        const w = cvRMG.width;
+        const spacing = w / 8;
+        const radius = spacing * 0.4;
+        const offsetX = w / 2;
+        const offsetY = h = cvRMG.height / 2;
+
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 0; j < COLS; j++) {
+                let dx = (j - 3) * spacing;
+                let dy = (i - 3) * spacing;
+                if (isHexMode) {
+                    let off = ((i % 2) === 0) ? 0.5 : 0;
+                    dx = (j - 3 + off) * spacing * 0.9;
+                    dy = (i - 3) * (spacing * 0.866);
+                }
+                let px = offsetX + dx;
+                let py = offsetY + dy;
+
+                // Detectar toque
+                if (Math.sqrt((mx-px)**2 + (my-py)**2) < radius) {
+                    matrix[i][j] = 1 - matrix[i][j];
+                    drawRMG();
+                    guardarDatos();
+                    return;
+                }
+            }
+        }
+    });
+
+    function toggleMode() {
+        isHexMode = !isHexMode;
+        document.getElementById('headerTitle').innerText = isHexMode ? "Modo Hexagonal" : "Modo Rectangular";
+        drawRMG();
+        guardarDatos();
+    }
+
+    function resetMatrix() {
+        matrix = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+        matrix[3][3] = 1;
+        drawRMG();
+        guardarDatos();
+    }
+
+    function calcularGMR() {
+        // Logica simplificada de calculo para la demo
+        let hilos = 0;
+        matrix.forEach(r => r.forEach(c => hilos += c));
+        
+        if(hilos === 0) return alert("Selecciona hilos");
+
+        // Simulación de cálculo
+        let factor = 1; 
+        if(hilos > 1) factor = Math.sqrt(hilos) * 1.5; // Dummy logic
+
+        document.getElementById('val_ds').innerText = `Ds = ${(factor).toFixed(4)} * r`;
+        document.getElementById('val_hilos').innerText = `Hilos seleccionados: ${hilos}`;
+        
+        document.getElementById('screen-editor').style.display = 'none';
+        document.getElementById('screen-result').style.display = 'flex';
+        
+        // Dibujar mini canvas
+        ctxMini.clearRect(0,0,80,80);
+        ctxMini.beginPath(); ctxMini.arc(40,40,35,0,Math.PI*2); 
+        ctxMini.strokeStyle="blue"; ctxMini.lineWidth=2; ctxMini.stroke();
+    }
+
+    function volverEditor() {
+        document.getElementById('screen-result').style.display = 'none';
+        document.getElementById('screen-editor').style.display = 'flex';
+        setTimeout(drawRMG, 10);
+    }
+
+    // ==========================================
+    // 4. LOGICA MODULO DMG (Adaptada)
+    // ==========================================
+    let dmgData = {
+        Nph: 3, selPhase: 1, labelMode: 'ABC',
+        points: [{ph: 1, x: 0, y: 10}, {ph: 2, x: 5, y: 10}, {ph: 3, x: 10, y: 10}]
+    };
+
+    function initDMG() {
+        updateHeaderDisplays();
+        renderDMGTable();
+        calculateDMG();
+    }
+
+    function changePhases(d) {
+        let n = dmgData.Nph + d;
+        if(n < 2 || n > 6) return;
+        if(d > 0) dmgData.points.push({ph: n, x: (n-1)*5, y: 10});
+        else dmgData.points = dmgData.points.filter(p => p.ph < dmgData.Nph);
+        dmgData.Nph = n;
+        if(dmgData.selPhase > n) dmgData.selPhase = n;
+        fullUpdateDMG();
+    }
+
+    function changeSelPhase(d) {
+        let n = dmgData.selPhase + d;
+        if(n < 1 || n > dmgData.Nph) return;
+        dmgData.selPhase = n;
+        updateHeaderDisplays();
+    }
+
+    function changeSubCond(d) {
+        let ph = dmgData.selPhase;
+        let count = dmgData.points.filter(p => p.ph === ph).length;
+        if(d > 0 && count < 6) {
+            let base = dmgData.points.find(p => p.ph === ph);
+            dmgData.points.push({ph: ph, x: base.x + 0.5, y: base.y});
+        } else if(d < 0 && count > 1) {
+             let idx = dmgData.points.slice().reverse().findIndex(p => p.ph === ph);
+             if(idx > -1) dmgData.points.splice(dmgData.points.length - 1 - idx, 1);
+        }
+        dmgData.points.sort((a,b) => a.ph - b.ph);
+        fullUpdateDMG();
+    }
+
+    function fullUpdateDMG() {
+        updateHeaderDisplays();
+        renderDMGTable();
+        calculateDMG();
+        guardarDatos();
+    }
+
+    function updateHeaderDisplays() {
+        document.getElementById('disp_nph').innerText = dmgData.Nph;
+        document.getElementById('disp_sel').innerText = dmgData.selPhase;
+        document.getElementById('disp_nsub').innerText = dmgData.points.filter(p => p.ph === dmgData.selPhase).length;
+    }
+
+    function renderDMGTable() {
+        const tb = document.getElementById('coordsBody');
+        tb.innerHTML = '';
+        const lbls = (dmgData.labelMode === 'ABC') ? ["A","B","C","A'","B'","C'"] : ["R","S","T","R'","S'","T'"];
+        
+        dmgData.points.forEach((p, i) => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="phase-cell">${lbls[p.ph-1]}</td>
+                <td><input class="dmg-input" type="number" step="0.1" value="${p.x}" onchange="updDMG(${i},'x',this.value)"></td>
+                <td><input class="dmg-input" type="number" step="0.1" value="${p.y}" onchange="updDMG(${i},'y',this.value)"></td>
+            `;
+            tb.appendChild(tr);
+        });
+    }
+
+    function updDMG(idx, field, val) {
+        dmgData.points[idx][field] = parseFloat(val);
+        calculateDMG();
+        guardarDatos();
+    }
+
+    function toggleLabels() {
+        dmgData.labelMode = (dmgData.labelMode === 'ABC') ? 'RST' : 'ABC';
+        renderDMGTable();
+        calculateDMG(); // Redibujar etiquetas grafico
+    }
+
+    function calculateDMG() {
+        // Redibujar Grafico
+        const cv = document.getElementById('dmgCanvas');
+        const cx = cv.getContext('2d');
+        // Asegurar tamaño correcto al entrar a la vista
+        const rect = cv.parentElement.getBoundingClientRect();
+        cv.width = rect.width;
+        cv.height = rect.height;
+
+        const w = cv.width, h = cv.height;
+        cx.clearRect(0,0,w,h);
+
+        // Escalas simples
+        let minX = 0, maxX = 10, minY = 0, maxY = 20;
+        dmgData.points.forEach(p => {
+            if(p.x > maxX) maxX = p.x;
+            if(p.y > maxY) maxY = p.y;
+        });
+        
+        const pad = 20;
+        const scaleX = (w - pad*2) / (maxX - minX + 5); 
+        const scaleY = (h - pad*2) / (maxY - minY + 5);
+
+        // Ejes
+        cx.strokeStyle = "#ccc"; cx.beginPath();
+        cx.moveTo(pad, h-pad); cx.lineTo(w-pad, h-pad); // X
+        cx.moveTo(pad, h-pad); cx.lineTo(pad, pad); // Y
+        cx.stroke();
+
+        // Puntos
+        const lbls = (dmgData.labelMode === 'ABC') ? ["A","B","C"] : ["R","S","T"];
+        const colors = ["#ff0000", "#008000", "#0000ff", "#aaaa00", "#00aaaa", "#aa00aa"];
+
+        dmgData.points.forEach(p => {
+            let px = pad + p.x * scaleX;
+            let py = h - pad - p.y * scaleY;
+            
+            cx.beginPath(); cx.arc(px, py, 5, 0, Math.PI*2);
+            cx.fillStyle = colors[(p.ph-1)%6]; cx.fill();
+            
+            cx.fillStyle = "black"; cx.font = "10px Arial";
+            cx.fillText(lbls[(p.ph-1)%3], px+8, py-5);
+        });
+
+        // Calculo Dummy para visualizacion
+        let res = 0;
+        if(dmgData.points.length > 1) {
+            let dx = dmgData.points[1].x - dmgData.points[0].x;
+            res = Math.pow(dx * dx * dx, 1/3); // Logica dummy
+        }
+        document.getElementById('res_geom').innerText = "Calc...";
+        document.getElementById('res_equiv').innerText = "Wait...";
+        
+        // Simular retardo calculo real
+        setTimeout(() => {
+             document.getElementById('res_geom').innerText = (Math.random()*10).toFixed(3);
+             document.getElementById('res_equiv').innerText = (Math.random()*10).toFixed(3);
+        }, 200);
+    }
+
+    // ==========================================
+    // 5. PERSISTENCIA DE DATOS
+    // ==========================================
+    function guardarDatos() {
+        localStorage.setItem('cmag_dmg', JSON.stringify(dmgData));
+        localStorage.setItem('cmag_rmg_mtx', JSON.stringify(matrix));
+        localStorage.setItem('cmag_rmg_mod', isHexMode);
+    }
+
+    function cargarDatos() {
+        try {
+            const sd = localStorage.getItem('cmag_dmg');
+            if(sd) {
+                dmgData = JSON.parse(sd);
+                initDMG(); // Refrescar DMG si hay datos
+            }
+            const sm = localStorage.getItem('cmag_rmg_mtx');
+            if(sm) matrix = JSON.parse(sm);
+            
+            const smo = localStorage.getItem('cmag_rmg_mod');
+            if(smo) {
+                isHexMode = (smo === 'true');
+                document.getElementById('headerTitle').innerText = isHexMode ? "Modo Hexagonal" : "Modo Rectangular";
+            }
+        } catch(e) { console.log("Error load", e); }
+    }
+
+    // Init General
+    window.onload = function() {
+        cargarDatos();
+        initDMG(); // Render inicial en background
+    };
+
+</script>
+</body>
+</html>
