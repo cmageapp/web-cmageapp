@@ -2,322 +2,375 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PLT Suite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMAG | eAPP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* =========================================
-           ESTILOS GENERALES (MENU OSCURO)
-           ========================================= */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; padding: 0;
-            width: 100vw; min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Header Fijo */
-        header {
-            background-color: #121212;
-            border-bottom: 1px solid #333;
-            height: 60px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 15px;
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-        }
-        header h1 { font-size: 1.1rem; margin: 0; font-weight: 600; }
-        .btn-back {
-            background: none; border: none; color: #4facfe; font-size: 1rem;
-            padding: 10px 15px 10px 0; cursor: pointer; visibility: hidden;
-            display: flex; align-items: center; gap: 5px;
-        }
-
-        /* Contenedor Principal */
-        #app-container { margin-top: 60px; width: 100%; height: calc(100vh - 60px); position: relative; }
-
-        /* Vistas */
-        .view-section { 
-            display: none; 
-            width: 100%; 
-            height: 100%; 
-            overflow-y: auto; 
-            padding-bottom: 40px;
-            background: #000; 
-        }
-        .view-section.active { display: block; animation: fadeIn 0.2s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Lista del Menú Principal */
-        .menu-list { list-style: none; padding: 0; margin: 0; }
-        .menu-item {
-            background-color: #000; padding: 20px 15px;
-            border-bottom: 1px solid #222;
-            display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer; transition: background 0.2s;
-        }
-        .menu-item:active { background-color: #1a1a1a; }
-        .item-left { display: flex; align-items: center; gap: 15px; }
-        .item-number { font-weight: bold; color: #4facfe; font-size: 1.1rem; min-width: 25px; }
-        .item-text h3 { margin: 0; font-size: 1rem; color: white; }
-        .item-text p { margin: 4px 0 0 0; font-size: 0.8rem; color: #888; }
-        .arrow-icon { color: #444; }
-
-        /* =========================================
-           ESTILOS ESPECIFICOS DE LOS MODULOS (RMG/DMG)
-           ========================================= */
-        /* Variables Retro HP */
         :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --text: #c9d1d9;
+            --accent: #58a6ff;
+            --success: #238636;
+            --border: #30363d;
+            
+            /* Paleta Retro HP Exacta */
             --hp-blue: #0000FF;
+            --hp-grey-light: #E0E0E0; 
+            --hp-grey-dark: #C0C0C0;  
+            --hp-text-blue: #0000FF;
             --hp-white: #FFFFFF;
-            --hp-grey: #e0e0e0;
+            --hp-black: #000000;
         }
-
-        .module-container {
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        /* HEADER PRINCIPAL */
+        header.web-header {
+            padding: 40px 20px;
+            text-align: center;
             width: 100%;
-            min-height: 100%;
-            background: #111;
-            display: flex; flex-direction: column;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        .logo { font-size: 2.5rem; font-weight: 800; color: white; margin: 0; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+        .tagline { color: #8b949e; margin-top: 10px; letter-spacing: 2px; font-size: 0.85rem; }
+
+        .container { max-width: 1000px; width: 95%; padding-bottom: 50px; }
+
+        /* LAYOUT */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            align-items: start;
         }
 
-        /* --- ESTILOS RMG --- */
-        .retro-viewport {
+        /* TARJETAS */
+        .calc-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            min-height: auto; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .retro-app-container {
+            position: relative;
+            width: 100%;
             background: var(--hp-white);
-            color: black;
-            display: flex; flex-direction: column;
-            border: 1px solid #333;
-            min-height: 400px;
+            display: flex;
+            flex-direction: column;
         }
-        .header-editor { 
-            background: var(--hp-blue); color: white; padding: 10px; 
-            text-align: center; font-weight: bold; font-size: 0.9rem;
-        }
-        canvas#matrixCanvas { 
-            width: 100%; height: auto; aspect-ratio: 1/1; 
-            display: block; margin: 0 auto; 
-            touch-action: none; /* Mejor respuesta tactil */
-        }
-        .footer-editor { 
-            background: #404040; display: flex; padding: 0; 
-            border-top: 1px solid #000;
-        }
-        .btn-menu { 
-            flex: 1; padding: 15px 5px; border: none; background: transparent; 
-            color: white; font-weight: bold; font-family: monospace; font-size: 0.9rem;
-            border-right: 1px solid #555; 
-        }
-        .btn-menu:active { background: #555; }
-
-        /* Resultados RMG */
-        #screen-result { display: none; flex-direction: column; padding: 20px; background: white; color: black; height: 100%; }
-        .main-ds { font-size: 1.4rem; font-family: serif; margin: 20px 0; color: #0000FF; font-weight: bold; }
-        .config-val { font-size: 0.9rem; color: #333; display: block; margin-bottom: 5px; }
-
-        /* --- ESTILOS DMG (Adaptados a Móvil) --- */
+        
+        /* ESTILOS ESPECIFICOS DMG RETRO (ESTILO IMAGEN) */
         .dmg-app-container {
-            display: flex; flex-direction: column;
-            background: #fff;
-            color: black;
-            min-height: 100%;
+            background: #222; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; /* Fuente más parecida a la imagen */
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+            border: 2px solid #000;
         }
+
+        /* BARRA SUPERIOR */
         .dmg-top-bar {
-            background: #222; color: #ddd; padding: 10px;
-            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+            background: #202020; /* Fondo casi negro */
+            color: #ccc;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between; /* Titulo izq, controles der */
+            align-items: flex-end;
             border-bottom: 1px solid #444;
+            height: 45px;
         }
-        .dmg-title { font-size: 0.9rem; width: 100%; margin-bottom: 10px; color: #aaa; }
-        .dmg-controls-wrapper { display: flex; gap: 15px; width: 100%; justify-content: space-around; }
         
+        .dmg-title {
+            color: #ddd;
+            font-size: 0.95rem;
+            padding-bottom: 5px;
+        }
+
+        .dmg-controls-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
         .ctrl-group { display: flex; flex-direction: column; align-items: center; }
-        .ctrl-label { font-size: 0.7rem; color: #888; margin-bottom: 3px; }
-        .ctrl-btn-group { display: flex; gap: 2px; }
+        .ctrl-label { color: #aaa; font-size: 0.7rem; margin-bottom: 2px; }
+        
+        .ctrl-btn-group { display: flex; align-items: center; gap: 1px; }
         .ctrl-btn-group button {
-            width: 30px; height: 30px; border: 1px solid #000; background: #e0e0e0;
-            font-weight: bold; font-size: 1rem;
+            background: #e0e0e0; 
+            border: 1px solid #000; 
+            border-radius: 2px;
+            cursor: pointer;
+            font-weight: bold; width: 22px; height: 18px; padding: 0;
+            font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: center;
         }
+        .ctrl-btn-group button:active { background: #bbb; }
+        
         .ctrl-val {
-            width: 30px; height: 30px; background: white; border: 1px solid black;
-            display: flex; align-items: center; justify-content: center; font-weight: bold;
+            background: #fff; color: #000; width: 28px; height: 18px; text-align: center;
+            font-weight: bold; border: 1px solid #000; display: flex; 
+            align-items: center; justify-content: center; font-size: 0.9rem;
+            border-radius: 2px;
         }
 
-        /* Cuerpo DMG Movil: Columna */
-        .dmg-body { display: flex; flex-direction: column; flex: 1; }
-        
-        /* Tabla */
-        .dmg-table-container { 
-            max-height: 250px; overflow-y: auto; 
-            border-bottom: 2px solid #000;
+        /* CUERPO DIVIDIDO */
+        .dmg-body { display: flex; flex: 1; background: #888; gap: 2px; border-top: 1px solid #000;}
+
+        /* TABLA IZQUIERDA */
+        .dmg-table-container {
+            flex: 0.8; background: #333; /* Fondo cabecera tabla */
+            overflow-y: auto; max-height: 400px;
+            display: flex; flex-direction: column;
         }
-        table#coordsTable { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        table#coordsTable th { background: #333; color: white; padding: 8px; position: sticky; top: 0; }
-        table#coordsTable td { border-bottom: 1px solid #ccc; padding: 0; height: 40px; }
         
+        table#coordsTable { width: 100%; border-collapse: collapse; background: #fff; font-size: 0.9rem; }
+        
+        /* Cabeceras estilo imagen */
+        table#coordsTable th { 
+            background: #333; 
+            color: #ddd; 
+            font-weight: normal;
+            font-size: 0.85rem; 
+            padding: 4px; 
+            text-align: left; 
+            border-right: 1px solid #555;
+        }
+        table#coordsTable th:last-child { border-right: none; }
+
+        table#coordsTable td { border-bottom: none; padding: 0; height: 24px; vertical-align: middle; }
+        table#coordsTable tr:nth-child(even) { background-color: #fff; }
+        
+        /* Inputs Excel Style */
         .dmg-input {
-            width: 100%; height: 100%; border: none; text-align: center; font-size: 1rem; background: transparent;
+            width: 100%; height: 100%;
+            border: 1px solid transparent; /* Invisible por defecto */
+            background: transparent; 
+            color: black;
+            font-family: inherit; font-size: 1rem; 
+            padding: 0 5px; 
+            box-sizing: border-box;
+            outline: none;
         }
-        .dmg-input:focus { background: #e8f4fc; border: 2px solid #0000FF; }
-        .phase-cell { background: #f0f0f0; text-align: center; font-weight: bold; width: 50px; }
-
-        /* Grafico DMG */
-        .graph-box { height: 250px; position: relative; background: white; border-bottom: 1px solid #ccc; }
         
-        /* Resultados DMG */
-        .dmg-results-box { padding: 15px; background: #E8F4FC; }
-        .res-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 1rem; }
-        .res-val-highlight { color: #008000; font-weight: bold; font-size: 1.2rem; }
-        .dmg-footer-btns { display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end; }
+        /* EL BORDE AZUL DE SELECCION */
+        .dmg-input:focus { 
+            border: 2px solid #0000FF; 
+            background-color: #fff;
+            z-index: 10; position: relative;
+        }
+        
+        .phase-cell { 
+            font-weight: normal; 
+            padding-left: 5px !important; 
+            color: #000; 
+            background: #f0f0f0; /* Gris muy clarito para la columna fase */
+            border-right: 1px solid #ccc;
+        }
+
+        /* DERECHA */
+        .dmg-visual-col { flex: 1.2; display: flex; flex-direction: column; background: #fff; }
+        
+        .graph-box { 
+            flex: 1; 
+            background: #fff; 
+            position: relative; 
+            border-bottom: 2px solid #000; 
+            min-height: 200px;
+        }
+        canvas#dmgCanvas { width: 100%; height: 100%; display: block; }
+
+        /* RESULTADOS */
+        .dmg-results-box {
+            background: #E8F4FC; /* Azul muy pálido exacto a la imagen */
+            padding: 8px; 
+            display: flex; flex-direction: column; gap: 2px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .res-header { color: #777; font-size: 0.8rem; margin-bottom: 2px; }
+        
+        .res-row { 
+            display: flex; justify-content: space-between; align-items: center; 
+            font-size: 1rem; color: black; margin-bottom: 2px;
+        }
+        .res-val { font-weight: normal; font-size: 1.1rem; }
+        .res-val-highlight { font-weight: normal; color: #008000; font-size: 1.1rem; }
+
+        .dmg-footer-btns { display: flex; gap: 5px; margin-top: 5px; justify-content: flex-end; }
+        
         .retro-btn {
-            padding: 8px 16px; background: #ddd; border: 1px solid #999; font-weight: bold; border-radius: 4px;
+            border: 1px solid #ccc; background: #e0e0e0; cursor: pointer;
+            font-family: inherit; font-size: 0.8rem; padding: 2px 10px;
+            border-radius: 2px; box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .retro-btn:hover { background: #d0d0d0; }
+        .retro-btn:active { background: #bbb; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1); }
+
+        /* --- PANTALLA 1: EDITOR (RMG - Mantenido igual) --- */
+        #screen-editor { display: flex; flex-direction: column; flex: 1; background: var(--hp-white); }
+        .header-editor {
+            background: var(--hp-blue); color: var(--hp-white);
+            padding: 10px 15px; font-family: 'Segoe UI', sans-serif; font-size: 1.1rem;
+            text-align: center;
+        }
+        canvas#matrixCanvas { background: var(--hp-white); display: block; width: 100%; height: auto; margin: 0 auto; flex: 1; outline: none; cursor: pointer; }
+        .footer-editor { background: #404040; display: flex; padding: 0; width: 100%; }
+        .btn-menu { flex: 1; padding: 12px 5px; border: none; background: transparent; font-family: monospace; font-weight: bold; cursor: pointer; text-align: center; font-size: 1rem; border-right: 1px solid #555; transition: all 0.1s; }
+        .btn-menu:last-child { border-right: none; }
+        .selected-btn { border: 3px solid #ff0000 !important; background-color: rgba(255, 0, 0, 0.2) !important; transform: scale(1.05); z-index: 10; }
+
+        /* --- PANTALLA 2: RESULTADOS (RMG) --- */
+        #screen-result { display: none; flex-direction: column; flex: 1; background: var(--hp-white); min-height: 450px; }
+        .header-result { background: var(--hp-blue); color: var(--hp-white); padding: 10px 15px; font-family: 'Segoe UI', sans-serif; font-size: 1.1rem; }
+        .result-body { padding: 20px; display: flex; justify-content: space-between; color: var(--hp-black); flex: 1; }
+        .result-data { text-align: left; flex: 1; }
+        .label-blue { color: var(--hp-text-blue); font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; display: block;}
+        .main-ds { font-size: 1.6rem; font-family: 'Times New Roman', serif; margin-bottom: 25px; display: block; }
+        .config-label { color: #888; font-size: 0.95rem; margin-bottom: 5px; display: block; }
+        .config-val { font-size: 1rem; margin-bottom: 3px; display: block; font-weight: bold; }
+        .result-graphic { width: 140px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        canvas#miniGeoCanvas { background: transparent; border-radius: 50%; margin-bottom: 5px; }
+        .geo-label { color: #999; font-size: 0.8rem; }
+        .footer-result { background: #404040; display: flex; padding: 0; width: 100%; }
+
+        /* --- COLUMNA DERECHA GENERAL --- */
+        /* HEADER DE LAS TARJETAS */
+        .card-header-modern { 
+            display: flex; 
+            justify-content: space-between; /* ESTO EMPUJA LA VERSIÓN A LA DERECHA */
+            align-items: center; 
+            padding: 15px 20px; 
+            border-bottom: 1px solid var(--border); 
         }
 
-        /* Inputs Generales (Vista 1 y 2) */
-        .form-container { padding: 20px; }
-        .input-box { margin-bottom: 15px; }
-        .input-box label { display: block; color: #aaa; margin-bottom: 5px; }
-        .my-input {
-            width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: white;
-            border-radius: 6px; font-size: 1rem;
+        .card-header-modern h3 { 
+            margin: 0; 
+            color: var(--accent); 
+            font-size: 1.1rem;
+            display: flex;       /* Para alinear icono y texto */
+            align-items: center; 
         }
-        .btn-calc {
-            width: 100%; padding: 14px; background: #4facfe; color: white; border: none;
-            border-radius: 6px; font-size: 1rem; font-weight: bold; margin-top: 10px;
-        }
-        .result-simple { margin-top: 20px; background: #111; padding: 15px; border-radius: 6px; display: none; }
 
+        /* ETIQUETA DE VERSIÓN (Pequeña y separada) */
+        .modern-badge { 
+            background: #23863644; 
+            color: #3fb950; 
+            padding: 3px 8px;
+            border-radius: 4px; 
+            font-size: 0.55rem;     /* Texto pequeño */
+            letter-spacing: 1.5px;  /* Letras separadas */
+            font-weight: bold;
+            white-space: nowrap;    /* Evita que se rompa en dos líneas */
+        }
+        /* DESCARGAS */
+        .downloads-section { grid-column: 1 / -1; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px; }
+        .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .app-item { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 10px; text-align: left; }
+        .btn-buy { display: inline-block; margin-top: 15px; color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
+
+        @media (max-width: 768px) { .workspace-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <header>
-        <button id="btn-back" class="btn-back" onclick="goHome()">
-            <i class="fas fa-chevron-left"></i> Volver
-        </button>
-        <h1 id="page-title">Menú Principal</h1>
-        <div style="width: 60px;"></div>
-    </header>
+<header class="web-header">
+    <h1 class="logo">CMAG<span>&nbsp;eApp</span></h1>
+    <p class="tagline">Engineered Applications</p>
+</header>
 
-    <div id="app-container">
-
-        <div id="view-home" class="view-section active">
-            <ul class="menu-list">
-                <li class="menu-item" onclick="goTo('view-lc', 'Cálculo L-C')">
-                    <div class="item-left">
-                        <span class="item-number">1.</span>
-                        <div class="item-text">
-                            <h3>Cálculo L y C</h3>
-                            <p>Inductancia y Capacitancia</p>
-                        </div>
-                    </div>
-                    <span class="arrow-icon">›</span>
-                </li>
-
-                <li class="menu-item" onclick="goTo('view-res', 'Resistencia')">
-                    <div class="item-left">
-                        <span class="item-number">2.</span>
-                        <div class="item-text">
-                            <h3>Resistencia (R)</h3>
-                            <p>Skin y Temperatura</p>
-                        </div>
-                    </div>
-                    <span class="arrow-icon">›</span>
-                </li>
-
-                <li class="menu-item" onclick="goTo('view-rmg', 'Calculadora RMG')">
-                    <div class="item-left">
-                        <span class="item-number">3.</span>
-                        <div class="item-text">
-                            <h3>RMG</h3>
-                            <p>Radio Medio Geométrico (Matriz)</p>
-                        </div>
-                    </div>
-                    <span class="arrow-icon">›</span>
-                </li>
-
-                <li class="menu-item" onclick="goTo('view-dmg', 'Calculadora DMG')">
-                    <div class="item-left">
-                        <span class="item-number">4.</span>
-                        <div class="item-text">
-                            <h3>DMG</h3>
-                            <p>Distancia Media Geométrica</p>
-                        </div>
-                    </div>
-                    <span class="arrow-icon">›</span>
-                </li>
-            </ul>
-        </div>
-
-        <div id="view-lc" class="view-section">
-            <div class="form-container">
-                <div class="input-box">
-                    <label>Radio (r) [m]</label>
-                    <input type="number" id="lc_r" class="my-input" placeholder="0.012">
-                </div>
-                <div class="input-box">
-                    <label>Distancia (D) [m]</label>
-                    <input type="number" id="lc_d" class="my-input" placeholder="5.0">
-                </div>
-                <button class="btn-calc" onclick="calcLC()">CALCULAR</button>
-                <div id="res-lc" class="result-simple">
-                    <p style="color:#aaa; margin:0">Inductancia:</p>
-                    <h2 id="out_L" style="margin:5px 0 15px; color:#4facfe">--</h2>
-                    <p style="color:#aaa; margin:0">Capacitancia:</p>
-                    <h2 id="out_C" style="margin:5px 0 0; color:#4facfe">--</h2>
-                </div>
+<div class="container">
+    <div class="workspace-grid">
+        
+        <div class="calc-card">
+            <div class="card-header-modern">
+                <h3>
+                    <svg width="34" height="34" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin-right: 12px;">
+                        <g fill="none" stroke="#58a6ff">
+                            <circle cx="50" cy="50" r="46" stroke-width="4" />
+                            
+                            <g stroke-width="6" transform="rotate(30, 50, 50)">
+                                <circle cx="50" cy="50" r="13" />
+                                <circle cx="50" cy="22" r="13" />
+                                <circle cx="74" cy="36" r="13" />
+                                <circle cx="74" cy="64" r="13" />
+                                <circle cx="50" cy="78" r="13" />
+                                <circle cx="26" cy="64" r="13" />
+                                <circle cx="26" cy="36" r="13" />
+                            </g>
+                        </g>
+                    </svg>
+                    Calculadora de RMG
+                </h3>
+                
+                <span class="modern-badge">vPLT_Module_RMG</span>
             </div>
-        </div>
 
-        <div id="view-res" class="view-section">
-            <div class="form-container">
-                <p>Módulo de resistencia en construcción.</p>
-            </div>
-        </div>
-
-        <div id="view-rmg" class="view-section">
-            <div class="module-container">
-                <div id="screen-editor" class="retro-viewport" style="display:flex;">
+            <div class="retro-app-container">
+                <div id="screen-editor">
                     <div class="header-editor"><span id="headerTitle">Modo Rectangular</span></div>
-                    <canvas id="matrixCanvas" width="600" height="600"></canvas>
-                    
+                    <canvas id="matrixCanvas" width="900" height="850" tabindex="0"></canvas>
                     <div class="footer-editor">
-                        <button class="btn-menu" onclick="toggleMode()">MODO</button>
-                        <button class="btn-menu" style="color: yellow;" onclick="resetMatrix()">RESET</button>
-                        <button class="btn-menu" style="color: #00ff00;" onclick="calcularGMR()">CALC</button>
+                        <button id="btnModo" class="btn-menu" style="color: #FFFFFF;" onclick="toggleMode()"> Modo</button>
+                        <button id="btnReset" class="btn-menu" style="color: #FFFF00;" onclick="resetMatrix()"> Reset</button>
+                        <button id="btnOk" class="btn-menu" style="color: #00FF00;" onclick="calcularGMR()"> Ok</button>
                     </div>
                 </div>
 
                 <div id="screen-result">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="margin:0; color:#0000FF">Resultados</h3>
-                        <canvas id="miniGeoCanvas" width="80" height="80"></canvas>
+                    <div class="header-result"> RMG del Conductor (en funcion al radio)</div>
+                    <div class="result-body">
+                        <div class="result-data">
+                            <span class="label-blue">RMG (Ds):</span>
+                            <span class="main-ds" id="val_ds">Ds = 0.000000 * r</span>
+                            <span class="config-label">Configuracion:</span>
+                            <span class="config-val" id="val_hilos">Hilos: 0</span>
+                            <span class="config-val">Radio de un hilo = r</span>
+                        </div>
+                        <div class="result-graphic">
+                            <canvas id="miniGeoCanvas" width="100" height="100"></canvas>
+                            <span class="geo-label">Geometria de hilos</span>
+                        </div>
                     </div>
-                    <hr style="width:100%; border:0; border-top:1px solid #ccc; margin:15px 0;">
-                    
-                    <span class="label-blue" style="color:#0000FF; font-weight:bold;">RMG Calculado:</span>
-                    <span class="main-ds" id="val_ds">Ds = ---</span>
-                    
-                    <div style="margin-top:20px;">
-                        <span class="config-val" id="val_hilos">Hilos: 0</span>
-                        <span class="config-val">Ref: radio del hilo (r)</span>
-                    </div>
-
-                    <div style="margin-top:auto; display:flex; gap:10px;">
-                         <button class="retro-btn" style="flex:1; background:#444; color:white;" onclick="volverEditor()">VOLVER</button>
+                    <div class="footer-result">
+                        <button id="btnVer" class="btn-menu" style="color: #00FF00;" onclick="alert('Función Pro en APK')"> Ver Calculos</button>
+                        <button id="btnSalir" class="btn-menu" style="color: #FFFF00;" onclick="volverEditor()"> Salir</button>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
 
-        <div id="view-dmg" class="view-section">
-            <div class="dmg-app-container" id="dmgContainer">
+        <div class="calc-card">
+            <div class="card-header-modern">
+                <h3>
+                    <i class="fas fa-calculator" style="margin-right: 12px; font-size: 1.5rem;"></i> 
+                    Calculadora de DMG
+                </h3>
+                <span class="modern-badge" style="background:#d2a8ff44; color:#d2a8ff;">vPLT_Module_DMG_Live</span>
+            </div>
+
+            <div class="dmg-app-container" id="dmgContainer" tabindex="0">
                 
                 <div class="dmg-top-bar">
-                    <div class="dmg-title">Configuración de Fases</div>
+                    <div class="dmg-title">Calculadora de DMG</div>
+                    
                     <div class="dmg-controls-wrapper">
                         <div class="ctrl-group">
-                            <span class="ctrl-label">Fases</span>
+                            <span class="ctrl-label">Nº de Fases</span>
                             <div class="ctrl-btn-group">
                                 <button onclick="changePhases(-1)">-</button>
                                 <span id="disp_nph" class="ctrl-val">3</span>
@@ -325,7 +378,7 @@
                             </div>
                         </div>
                         <div class="ctrl-group">
-                            <span class="ctrl-label">Sel Fase</span>
+                            <span class="ctrl-label">Selector Fase</span>
                             <div class="ctrl-btn-group">
                                 <button onclick="changeSelPhase(-1)">-</button>
                                 <span id="disp_sel" class="ctrl-val" style="background:#FFFF00; color:black;">1</span>
@@ -333,7 +386,7 @@
                             </div>
                         </div>
                         <div class="ctrl-group">
-                            <span class="ctrl-label">Conduc.</span>
+                            <span class="ctrl-label">Nº Conductor</span>
                             <div class="ctrl-btn-group">
                                 <button onclick="changeSubCond(-1)">-</button>
                                 <span id="disp_nsub" class="ctrl-val">1</span>
@@ -348,30 +401,37 @@
                         <table id="coordsTable">
                             <thead>
                                 <tr>
-                                    <th style="width:50px;">Fase</th>
-                                    <th>Pos X</th>
-                                    <th>Pos Y</th>
+                                    <th style="width: 40px;">Fase</th>
+                                    <th>X</th>
+                                    <th>Y</th>
                                 </tr>
                             </thead>
-                            <tbody id="coordsBody"></tbody>
+                            <tbody id="coordsBody">
+                                </tbody>
                         </table>
                     </div>
 
-                    <div class="graph-box">
-                        <canvas id="dmgCanvas" width="300" height="250" style="width:100%; height:100%; display:block;"></canvas>
-                    </div>
-
-                    <div class="dmg-results-box">
-                        <div class="res-row">
-                            <span>DMG Teórico:</span>
-                            <span id="res_geom">---</span>
+                    <div class="dmg-visual-col">
+                        <div class="graph-box">
+                            <canvas id="dmgCanvas" width="300" height="250"></canvas>
                         </div>
-                        <div class="res-row">
-                            <span>DMG Equiv:</span>
-                            <span id="res_equiv" class="res-val-highlight">---</span>
-                        </div>
-                        <div class="dmg-footer-btns">
-                            <button class="retro-btn" onclick="toggleLabels()">Etiquetas</button>
+                        
+                        <div class="dmg-results-box">
+                            <div class="res-header">Resultados:</div>
+                            <div class="res-header">(Misma Unidades Coordenadas)</div>
+                            <div class="res-row">
+                                <span>DMG Geometrico:</span>
+                                <span id="res_geom" class="res-val">---</span>
+                            </div>
+                            <div class="res-row">
+                                <span>DMG Equivalente:</span>
+                                <span id="res_equiv" class="res-val-highlight">---</span>
+                            </div>
+                            
+                            <div class="dmg-footer-btns">
+                                <button class="retro-btn" onclick="toggleLabels()">RST</button>
+                                <button class="retro-btn" onclick="alert('Función Pro en APK')"> Ver Calculos</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -380,369 +440,798 @@
 
     </div>
 
+    <div class="downloads-section">
+        <h3 style="color:white; margin-bottom:20px;">Versiones Completas (Android)</h3>
+        <div class="app-grid">
+            <div class="app-item">
+                <h3 style="margin:0; color:var(--accent);">PLT APK</h3>
+                <span style="color:#3fb950; font-size:0.8rem;">25.000 GS / 4 USD</span>
+                <p style="font-size:0.9rem; color:#8b949e;">Incluye cálculo completo de Inductancia y Capacitancia.</p>
+				<p style="font-size:0.9rem; color:#8b949e;">Guía paso a paso y tablas de resistencia de conductores ACSR.</p>
+				<p style="font-size:0.9rem; color:#8b949e;">Calculadora RMG con paso a paso de cálculos realizados.</p>
+				<p style="font-size:0.9rem; color:#8b949e;">Calculadora DMG con paso a paso de cálculos realizados.</p>
+				<p style="font-size:0.9rem; color:#8b949e;">Fórmulas, unidades y guías didácticas.</p>
+				<p style="font-size:0.9rem; color:#8b949e;">Port para la calculadora gráfica HP Prime G2.</p>
+                <a href="#" class="btn-buy"><i class="fab fa-android"></i> OBTENER AHORA</a>
+            </div>
+            <div class="app-item">
+                <h3 style="margin:0; color:#d2a8ff;">Proximamente APK</h3>
+                <span style="color:#3fb950; font-size:0.8rem;">35.000 GS / 5 USD</span>
+                <p style="font-size:0.9rem; color:#8b949e;">Herramienta avanzada para dimensionamiento de Instalaciones Industriales.</p>
+                <a href="#" class="btn-buy" style="color:#d2a8ff;"><i class="fab fa-android"></i> OBTENER AHORA</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    // ==========================================
-    // 1. SISTEMA DE NAVEGACION
-    // ==========================================
-    function goTo(viewId, title) {
-        // Ocultar todas
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        
-        // Mostrar seleccionada
-        const target = document.getElementById(viewId);
-        target.classList.add('active');
+    // ==========================================================
+    // CODIGO CALCULADORA RMG (ORIGINAL)
+    // ==========================================================
+    const ROWS = 7; const COLS = 7;
+    let matrix = []; let isHexMode = false;
+    let currentScreen = 'EDITOR'; 
+    let editorZone = 'GRID'; 
+    let cursorRow = 3; 
+    let cursorCol = 3;
+    let menuIndex = 1; 
+    let resultIndex = -1;
 
-        // Config Header
-        document.getElementById('page-title').innerText = title;
-        document.getElementById('btn-back').style.visibility = 'visible';
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    const miniCanvas = document.getElementById('miniGeoCanvas');
+    const ctxMini = miniCanvas.getContext('2d');
 
-        // Inicializar Modulos si es necesario (Fix Canvas Size)
-        if(viewId === 'view-rmg') setTimeout(initRMGCanvas, 50);
-        if(viewId === 'view-dmg') setTimeout(calculateDMG, 50);
+    const C_AZUL = "#0000FF"; const C_GRIS = "#CCCCCC"; const C_BLANCO = "#FFFFFF";
+    const SPACING = 106; const RADIUS = 50; 
 
-        window.scrollTo(0,0);
-    }
+    resetMatrix();
+    // No forzamos focus onload para no molestar la navegacion del nuevo modulo
 
-    function goHome() {
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        document.getElementById('view-home').classList.add('active');
-        document.getElementById('page-title').innerText = "Menú Principal";
-        document.getElementById('btn-back').style.visibility = 'hidden';
-    }
-
-    // ==========================================
-    // 2. LOGICA MODULO SIMPLE (L-C)
-    // ==========================================
-    function calcLC() {
-        let r = parseFloat(document.getElementById('lc_r').value);
-        let d = parseFloat(document.getElementById('lc_d').value);
-        if(!r || !d) return alert("Datos inválidos");
-        
-        let L = 0.2 * Math.log(d/r);
-        let C = 0.0556 / Math.log(d/r);
-        
-        document.getElementById('out_L').innerText = L.toFixed(4) + " mH/km";
-        document.getElementById('out_C').innerText = C.toFixed(4) + " µF/km";
-        document.getElementById('res-lc').style.display = 'block';
-    }
-
-    // ==========================================
-    // 3. LOGICA MODULO RMG (Adaptada)
-    // ==========================================
-    const ROWS = 7, COLS = 7;
-    let matrix = Array(ROWS).fill().map(() => Array(COLS).fill(0));
-    matrix[3][3] = 1; // Centro activo por defecto
-    let isHexMode = false;
-
-    const cvRMG = document.getElementById('matrixCanvas');
-    const ctxRMG = cvRMG.getContext('2d');
-    const cvMini = document.getElementById('miniGeoCanvas');
-    const ctxMini = cvMini.getContext('2d');
-
-    function initRMGCanvas() {
-        // Redimensionar canvas al tamaño real del contenedor movil
-        const rect = cvRMG.getBoundingClientRect();
-        cvRMG.width = rect.width;
-        cvRMG.height = rect.width; // Cuadrado
-        drawRMG();
-    }
-
-    function drawRMG() {
-        const w = cvRMG.width;
-        const h = cvRMG.height;
-        ctxRMG.fillStyle = "white"; ctxRMG.fillRect(0,0,w,h);
-        
-        const spacing = w / 8; 
-        const radius = spacing * 0.4;
-        const offsetX = w / 2;
-        const offsetY = h / 2;
+    function draw() {
+        ctx.fillStyle = C_BLANCO; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const offsetX = canvas.width / 2; const offsetY = canvas.height / 2;
 
         for (let i = 0; i < ROWS; i++) {
             for (let j = 0; j < COLS; j++) {
-                let dx = (j - 3) * spacing;
-                let dy = (i - 3) * spacing;
+                let coords = getCoordinates(i, j, SPACING, isHexMode);
+                const px = offsetX + coords.x; const py = offsetY + coords.y;
                 
-                if (isHexMode) {
-                    let off = ((i % 2) === 0) ? 0.5 : 0;
-                    dx = (j - 3 + off) * spacing * 0.9;
-                    dy = (i - 3) * (spacing * 0.866);
-                }
-
-                let px = offsetX + dx;
-                let py = offsetY + dy;
-
-                ctxRMG.beginPath(); 
-                ctxRMG.arc(px, py, radius, 0, Math.PI*2);
+                ctx.beginPath(); ctx.arc(px, py, RADIUS, 0, 2 * Math.PI);
                 
                 if (matrix[i][j] === 1) {
-                    ctxRMG.strokeStyle = "blue"; ctxRMG.lineWidth = 3; ctxRMG.stroke();
-                    ctxRMG.beginPath(); ctxRMG.arc(px, py, radius*0.3, 0, Math.PI*2); ctxRMG.fillStyle="blue"; ctxRMG.fill();
+                    ctx.strokeStyle = C_AZUL; ctx.lineWidth = 6; 
+                    ctx.stroke();
+                    ctx.beginPath(); ctx.arc(px, py, RADIUS-8, 0, 2 * Math.PI);
+                    ctx.lineWidth = 2; ctx.stroke();
                 } else {
-                    ctxRMG.strokeStyle = "#ddd"; ctxRMG.lineWidth = 1; ctxRMG.stroke();
+                    ctx.strokeStyle = C_GRIS; ctx.lineWidth = 2; ctx.stroke();
+                    ctx.fillStyle = C_GRIS; ctx.fillRect(px-2, py-2, 4, 4);
+                }
+
+                if(currentScreen === 'EDITOR' && editorZone === 'GRID' && i === cursorRow && j === cursorCol) { 
+                    ctx.strokeStyle = "red"; ctx.lineWidth = 3; 
+                    ctx.strokeRect(px-15, py-15, 30, 30); 
                 }
             }
         }
     }
 
-    // Interacción Táctil/Click RMG
-    cvRMG.addEventListener('click', function(e) {
-        const rect = cvRMG.getBoundingClientRect();
-        const scaleX = cvRMG.width / rect.width;
-        const scaleY = cvRMG.height / rect.height;
-        const mx = (e.clientX - rect.left) * scaleX;
-        const my = (e.clientY - rect.top) * scaleY;
+    function updateButtonVisuals() {
+        ['btnModo', 'btnReset', 'btnOk', 'btnVer', 'btnSalir'].forEach(id => {
+            document.getElementById(id).classList.remove('selected-btn');
+        });
 
-        const w = cvRMG.width;
-        const spacing = w / 8;
-        const radius = spacing * 0.4;
-        const offsetX = w / 2;
-        const offsetY = h = cvRMG.height / 2;
+        if (currentScreen === 'EDITOR' && editorZone === 'MENU') {
+            const ids = ['btnModo', 'btnReset', 'btnOk'];
+            document.getElementById(ids[menuIndex]).classList.add('selected-btn');
+        } 
+        else if (currentScreen === 'RESULT') {
+            if (resultIndex > -1) {
+                const idsRes = ['btnVer', 'btnSalir'];
+                document.getElementById(idsRes[resultIndex]).classList.add('selected-btn');
+            }
+        }
+    }
+
+    // MANEJO TECLADO GLOBAL (Con filtro para RMG)
+    window.addEventListener('keydown', function(e) {
+        // Si el foco está dentro del contenedor DMG, NO ejecutar logica RMG
+        if (document.getElementById('dmgContainer').contains(document.activeElement)) {
+            handleDMGKeydown(e);
+            return; 
+        }
+
+        // Si es un input normal (fuera de DMG), ignorar
+        if(e.target.tagName === 'INPUT' && !e.target.classList.contains('dmg-input')) return;
+
+        if (currentScreen === 'EDITOR') {
+            if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight", "Enter"].indexOf(e.code) > -1) e.preventDefault();
+            handleEditorInput(e.key);
+        } else if (currentScreen === 'RESULT') {
+            if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight", "Enter"].indexOf(e.code) > -1) e.preventDefault();
+            handleResultInput(e.key);
+        }
+    });
+
+    function handleEditorInput(key) {
+        if (editorZone === 'GRID') {
+            switch(key) {
+                case 'ArrowUp': if (cursorRow > 0) cursorRow--; break;
+                case 'ArrowDown': 
+                    if (cursorRow < ROWS - 1) { cursorRow++; } else {
+                        editorZone = 'MENU';
+                        menuIndex = 1; 
+                        updateButtonVisuals();
+                    }
+                    break;
+                case 'ArrowLeft': if (cursorCol > 0) cursorCol--; break;
+                case 'ArrowRight': if (cursorCol < COLS - 1) cursorCol++; break;
+                case 'Enter': matrix[cursorRow][cursorCol] = 1 - matrix[cursorRow][cursorCol]; break;
+            }
+            draw(); 
+        } else if (editorZone === 'MENU') {
+            switch(key) {
+                case 'ArrowLeft': if (menuIndex > 0) menuIndex--; break;
+                case 'ArrowRight': if (menuIndex < 2) menuIndex++; break;
+                case 'ArrowUp': 
+                    editorZone = 'GRID';
+                    cursorRow = ROWS - 1; 
+                    updateButtonVisuals(); draw();
+                    break;
+                case 'Enter':
+                    const ids = ['btnModo', 'btnReset', 'btnOk'];
+                    document.getElementById(ids[menuIndex]).click();
+                    break;
+            }
+            updateButtonVisuals();
+        }
+    }
+
+    function handleResultInput(key) {
+        if (resultIndex === -1) {
+            if (key === 'ArrowLeft') resultIndex = 0; 
+            else if (key === 'ArrowRight') resultIndex = 1; 
+        } else {
+            switch(key) {
+                case 'ArrowLeft': if (resultIndex > 0) resultIndex--; break;
+                case 'ArrowRight': if (resultIndex < 1) resultIndex++; break;
+                case 'Enter':
+                    const ids = ['btnVer', 'btnSalir'];
+                    document.getElementById(ids[resultIndex]).click();
+                    break;
+            }
+        }
+        updateButtonVisuals();
+    }
+
+    function getCoordinates(i, j, spacing, hex) {
+        let dx = (j - 3) * spacing; let dy = (i - 3) * spacing;
+        if (hex) {
+            let off_hex = ((i % 2) === 0) ? 0.5 : 0;
+            dx = (j - 3 + off_hex) * spacing - (spacing * 0.25); 
+            dy = (i - 3) * (spacing * 0.866025);
+        }
+        return {x: dx, y: dy};
+    }
+
+    canvas.addEventListener('click', function(event) {
+        if (currentScreen !== 'EDITOR') return;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width; 
+        const scaleY = canvas.height / rect.height;
+        const mx = (event.clientX - rect.left) * scaleX; 
+        const my = (event.clientY - rect.top) * scaleY;
+        const offsetX = canvas.width / 2; const offsetY = canvas.height / 2;
 
         for (let i = 0; i < ROWS; i++) {
             for (let j = 0; j < COLS; j++) {
-                let dx = (j - 3) * spacing;
-                let dy = (i - 3) * spacing;
-                if (isHexMode) {
-                    let off = ((i % 2) === 0) ? 0.5 : 0;
-                    dx = (j - 3 + off) * spacing * 0.9;
-                    dy = (i - 3) * (spacing * 0.866);
-                }
-                let px = offsetX + dx;
-                let py = offsetY + dy;
-
-                // Detectar toque
-                if (Math.sqrt((mx-px)**2 + (my-py)**2) < radius) {
-                    matrix[i][j] = 1 - matrix[i][j];
-                    drawRMG();
+                let coords = getCoordinates(i, j, SPACING, isHexMode);
+                if (Math.sqrt((mx-(offsetX+coords.x))**2 + (my-(offsetY+coords.y))**2) < RADIUS) {
+                    matrix[i][j] = 1 - matrix[i][j]; 
+                    editorZone = 'GRID';
+                    cursorRow = i; cursorCol = j;
+                    updateButtonVisuals();
+                    draw();
+					// AGREGAR ESTA LÍNEA AQUÍ: guardado de datos
                     guardarDatos();
-                    return;
+					return;
                 }
             }
         }
     });
 
-    function toggleMode() {
-        isHexMode = !isHexMode;
-        document.getElementById('headerTitle').innerText = isHexMode ? "Modo Hexagonal" : "Modo Rectangular";
-        drawRMG();
-        guardarDatos();
+    function toggleMode() { 
+        isHexMode = !isHexMode; 
+        document.getElementById('headerTitle').innerText = isHexMode ? "Modo Hexagonal" : "Modo Rectangular"; 
+        draw();
+        guardarDatos(); // <--- AGREGAR guardado de datos		
+        if(editorZone === 'GRID') canvas.focus();
+    }
+    
+    function resetMatrix() { 
+        matrix = Array(ROWS).fill().map(() => Array(COLS).fill(0)); 
+        cursorRow = 3; cursorCol = 3;
+        editorZone = 'GRID'; 
+        matrix[3][3] = 1; 
+        updateButtonVisuals();
+        draw(); 
     }
 
-    function resetMatrix() {
-        matrix = Array(ROWS).fill().map(() => Array(COLS).fill(0));
-        matrix[3][3] = 1;
-        drawRMG();
-        guardarDatos();
+    function volverEditor() { 
+        document.getElementById('screen-result').style.display = 'none'; 
+        document.getElementById('screen-editor').style.display = 'flex'; 
+        currentScreen = 'EDITOR';
+        editorZone = 'GRID';
+        updateButtonVisuals();
+        draw();
+		guardarDatos(); // <--- AGREGAR guardado de datos
     }
 
     function calcularGMR() {
-        // Logica simplificada de calculo para la demo
-        let hilos = 0;
-        matrix.forEach(r => r.forEach(c => hilos += c));
-        
-        if(hilos === 0) return alert("Selecciona hilos");
+        let points = []; const spacing_math = 2.0;
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 0; j < COLS; j++) {
+                if (matrix[i][j] === 1) {
+                    let dx_m = (j - 3) * spacing_math; 
+                    let dy_m = (i - 3) * spacing_math;
+                    if(isHexMode) {
+                         let off = ((i % 2) === 0) ? 0.5 : 0;
+                         dx_m = (j - 3 + off) * spacing_math;
+                         dy_m = (i - 3) * (spacing_math * 0.866025);
+                    }
+                    points.push({x: dx_m, y: -dy_m}); 
+                }
+            }
+        }
+        const n = points.length;
+        if (n === 0) { alert("Selecciona al menos un hilo"); return; }
 
-        // Simulación de cálculo
-        let factor = 1; 
-        if(hilos > 1) factor = Math.sqrt(hilos) * 1.5; // Dummy logic
-
-        document.getElementById('val_ds').innerText = `Ds = ${(factor).toFixed(4)} * r`;
-        document.getElementById('val_hilos').innerText = `Hilos seleccionados: ${hilos}`;
+        let sumLogDist = 0; const r_prime = Math.exp(-0.25);
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                let dist = (i === j) ? r_prime : Math.sqrt( (points[i].x - points[j].x)**2 + (points[i].y - points[j].y)**2 );
+                sumLogDist += Math.log(dist);
+            }
+        }
+        const Ds = Math.exp((1 / (n * n)) * sumLogDist);
         
+        document.getElementById('val_ds').innerText = "Ds = " + Ds.toFixed(6) + " * r";
+        document.getElementById('val_hilos').innerText = "Hilos: " + n;
+        drawMiniGeo(points);
+
         document.getElementById('screen-editor').style.display = 'none';
         document.getElementById('screen-result').style.display = 'flex';
         
-        // Dibujar mini canvas
-        ctxMini.clearRect(0,0,80,80);
-        ctxMini.beginPath(); ctxMini.arc(40,40,35,0,Math.PI*2); 
-        ctxMini.strokeStyle="blue"; ctxMini.lineWidth=2; ctxMini.stroke();
+        currentScreen = 'RESULT';
+        resultIndex = -1; 
+        updateButtonVisuals();
     }
 
-    function volverEditor() {
-        document.getElementById('screen-result').style.display = 'none';
-        document.getElementById('screen-editor').style.display = 'flex';
-        setTimeout(drawRMG, 10);
+    function drawMiniGeo(activePoints) {
+        ctxMini.clearRect(0, 0, miniCanvas.width, miniCanvas.height);
+        const cx = miniCanvas.width / 2; const cy = miniCanvas.height / 2;
+        const containerRadius = 48;
+
+        let centroidX = 0, centroidY = 0;
+        activePoints.forEach(p => { centroidX += p.x; centroidY += p.y; });
+        centroidX /= activePoints.length;
+        centroidY /= activePoints.length;
+
+        let centeredPoints = activePoints.map(p => ({x: p.x - centroidX, y: p.y - centroidY}));
+
+        let maxDistFromCenter = 0;
+        centeredPoints.forEach(p => { 
+            let dist = Math.sqrt(p.x*p.x + p.y*p.y);
+            if(dist > maxDistFromCenter) maxDistFromCenter = dist;
+        });
+
+        let totalBoundingRadius = maxDistFromCenter + 1.0;
+        let scale = (containerRadius * 0.9) / totalBoundingRadius;
+        if (maxDistFromCenter === 0) scale = 20; 
+        const miniRad = scale * 1.0; 
+
+        ctxMini.beginPath(); ctxMini.arc(cx, cy, containerRadius, 0, 2*Math.PI);
+        ctxMini.strokeStyle = "black"; ctxMini.lineWidth = 1; ctxMini.stroke();
+
+        centeredPoints.forEach(p => {
+            let px = cx + p.x * scale; let py = cy - p.y * scale; 
+            ctxMini.beginPath(); ctxMini.arc(px, py, miniRad, 0, 2*Math.PI);
+            ctxMini.fillStyle = C_BLANCO; ctxMini.fill(); 
+            ctxMini.strokeStyle = C_AZUL; ctxMini.lineWidth = 2; ctxMini.stroke();
+        });
     }
 
-    // ==========================================
-    // 4. LOGICA MODULO DMG (Adaptada)
-    // ==========================================
+// ==========================================================
+    // CODIGO CALCULADORA DMG (NUEVA LOGICA + NAVEGACION)
+    // ==========================================================
     let dmgData = {
-        Nph: 3, selPhase: 1, labelMode: 'ABC',
-        points: [{ph: 1, x: 0, y: 10}, {ph: 2, x: 5, y: 10}, {ph: 3, x: 10, y: 10}]
+        Nph: 3,
+        selPhase: 1, 
+        points: [
+            {ph: 1, x: 0, y: 10}, 
+            {ph: 2, x: 5, y: 10}, 
+            {ph: 3, x: 10, y: 10} 
+        ],
+        labelMode: 'ABC'
     };
 
+    // Inicialización DMG
+    initDMG();
+
     function initDMG() {
-        updateHeaderDisplays();
         renderDMGTable();
-        calculateDMG();
+        calculateDMG(); 
     }
 
-    function changePhases(d) {
-        let n = dmgData.Nph + d;
-        if(n < 2 || n > 6) return;
-        if(d > 0) dmgData.points.push({ph: n, x: (n-1)*5, y: 10});
-        else dmgData.points = dmgData.points.filter(p => p.ph < dmgData.Nph);
-        dmgData.Nph = n;
-        if(dmgData.selPhase > n) dmgData.selPhase = n;
-        fullUpdateDMG();
-    }
-
-    function changeSelPhase(d) {
-        let n = dmgData.selPhase + d;
-        if(n < 1 || n > dmgData.Nph) return;
-        dmgData.selPhase = n;
-        updateHeaderDisplays();
-    }
-
-    function changeSubCond(d) {
-        let ph = dmgData.selPhase;
-        let count = dmgData.points.filter(p => p.ph === ph).length;
-        if(d > 0 && count < 6) {
-            let base = dmgData.points.find(p => p.ph === ph);
-            dmgData.points.push({ph: ph, x: base.x + 0.5, y: base.y});
-        } else if(d < 0 && count > 1) {
-             let idx = dmgData.points.slice().reverse().findIndex(p => p.ph === ph);
-             if(idx > -1) dmgData.points.splice(dmgData.points.length - 1 - idx, 1);
+    // --- CONTROLES DMG ---
+    function changePhases(delta) {
+        let newN = dmgData.Nph + delta;
+        if (newN < 2 || newN > 6) return;
+        
+        if (delta > 0) {
+            dmgData.points.push({ph: newN, x: (newN-1)*5, y: 10});
+        } else {
+            dmgData.points = dmgData.points.filter(p => p.ph < dmgData.Nph);
         }
-        dmgData.points.sort((a,b) => a.ph - b.ph);
-        fullUpdateDMG();
-    }
-
-    function fullUpdateDMG() {
+        dmgData.Nph = newN;
+        if(dmgData.selPhase > newN) dmgData.selPhase = newN;
+        
         updateHeaderDisplays();
         renderDMGTable();
         calculateDMG();
-        guardarDatos();
+    }
+
+    function changeSelPhase(delta) {
+        let newSel = dmgData.selPhase + delta;
+        if (newSel < 1 || newSel > dmgData.Nph) return;
+        dmgData.selPhase = newSel;
+        updateHeaderDisplays();
+    }
+
+    function changeSubCond(delta) {
+        const ph = dmgData.selPhase;
+        const currentSub = dmgData.points.filter(p => p.ph === ph).length;
+        
+        if (delta > 0 && currentSub < 10) {
+            let baseP = dmgData.points.find(p => p.ph === ph);
+            dmgData.points.push({
+                ph: ph, 
+                x: baseP.x + 0.5, 
+                y: baseP.y 
+            });
+        } else if (delta < 0 && currentSub > 1) {
+            let idxToRemove = -1;
+            for(let i = dmgData.points.length - 1; i >= 0; i--){
+                if(dmgData.points[i].ph === ph) {
+                    idxToRemove = i;
+                    break;
+                }
+            }
+            if(idxToRemove !== -1) dmgData.points.splice(idxToRemove, 1);
+        }
+        
+        dmgData.points.sort((a,b) => a.ph - b.ph);
+        
+        updateHeaderDisplays();
+        renderDMGTable();
+        calculateDMG();
     }
 
     function updateHeaderDisplays() {
         document.getElementById('disp_nph').innerText = dmgData.Nph;
         document.getElementById('disp_sel').innerText = dmgData.selPhase;
-        document.getElementById('disp_nsub').innerText = dmgData.points.filter(p => p.ph === dmgData.selPhase).length;
-    }
-
-    function renderDMGTable() {
-        const tb = document.getElementById('coordsBody');
-        tb.innerHTML = '';
-        const lbls = (dmgData.labelMode === 'ABC') ? ["A","B","C","A'","B'","C'"] : ["R","S","T","R'","S'","T'"];
-        
-        dmgData.points.forEach((p, i) => {
-            let tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="phase-cell">${lbls[p.ph-1]}</td>
-                <td><input class="dmg-input" type="number" step="0.1" value="${p.x}" onchange="updDMG(${i},'x',this.value)"></td>
-                <td><input class="dmg-input" type="number" step="0.1" value="${p.y}" onchange="updDMG(${i},'y',this.value)"></td>
-            `;
-            tb.appendChild(tr);
-        });
-    }
-
-    function updDMG(idx, field, val) {
-        dmgData.points[idx][field] = parseFloat(val);
-        calculateDMG();
-        guardarDatos();
+        const nSub = dmgData.points.filter(p => p.ph === dmgData.selPhase).length;
+        document.getElementById('disp_nsub').innerText = nSub;
     }
 
     function toggleLabels() {
+        // 1. Cambiamos el modo interno (Si era ABC pasa a RST, y viceversa)
         dmgData.labelMode = (dmgData.labelMode === 'ABC') ? 'RST' : 'ABC';
+
+        // 2. Definimos qué mostrar en el botón (Lo OPUESTO al modo actual)
+        // Si ahora estoy en ABC -> El botón debe decir "RST" para invitar a cambiar
+        const textForButton = (dmgData.labelMode === 'ABC') ? 'RST' : 'ABC';
+        document.querySelector('.dmg-footer-btns .retro-btn').innerText = textForButton;
+
+        // 3. Renderizar
         renderDMGTable();
-        calculateDMG(); // Redibujar etiquetas grafico
+        calculateDMG();
     }
 
-    function calculateDMG() {
-        // Redibujar Grafico
-        const cv = document.getElementById('dmgCanvas');
-        const cx = cv.getContext('2d');
-        // Asegurar tamaño correcto al entrar a la vista
-        const rect = cv.parentElement.getBoundingClientRect();
-        cv.width = rect.width;
-        cv.height = rect.height;
+    // --- TABLA Y EDICION DMG ---
+// --- TABLA Y EDICION DMG (VERSIÓN TECLADO COMPLETO) ---
+function renderDMGTable() {
+    const tbody = document.getElementById('coordsBody');
+    tbody.innerHTML = '';
+    
+    const lblsABC = ["A", "B", "C", "A'", "B'", "C'"];
+    const lblsRST = ["R", "S", "T", "R'", "S'", "T'"];
+    const labels = (dmgData.labelMode === 'ABC') ? lblsABC : lblsRST;
+    let countMap = {}; 
 
-        const w = cv.width, h = cv.height;
-        cx.clearRect(0,0,w,h);
-
-        // Escalas simples
-        let minX = 0, maxX = 10, minY = 0, maxY = 20;
-        dmgData.points.forEach(p => {
-            if(p.x > maxX) maxX = p.x;
-            if(p.y > maxY) maxY = p.y;
-        });
+    dmgData.points.forEach((p, index) => {
+        if(!countMap[p.ph]) countMap[p.ph] = 0;
+        countMap[p.ph]++;
         
-        const pad = 20;
-        const scaleX = (w - pad*2) / (maxX - minX + 5); 
-        const scaleY = (h - pad*2) / (maxY - minY + 5);
+        let label = labels[p.ph - 1] || "?";
+        const totalInPhase = dmgData.points.filter(x => x.ph === p.ph).length;
+        if(totalInPhase > 1) label += "." + countMap[p.ph];
 
-        // Ejes
-        cx.strokeStyle = "#ccc"; cx.beginPath();
-        cx.moveTo(pad, h-pad); cx.lineTo(w-pad, h-pad); // X
-        cx.moveTo(pad, h-pad); cx.lineTo(pad, pad); // Y
-        cx.stroke();
+        let tr = document.createElement('tr');
+        
+        // --- CAMBIO CLAVE EN EL REGEX ---
+        // Usamos: /[^0-9.,+*\/() -]/g
+        // 1. La barra de dividir '/' tiene una contra barra '\' antes para que no cierre el regex.
+        // 2. El guion '-' está AL FINAL DE TODO. Esto evita que rompa el código.
+        
+        tr.innerHTML = `
+            <td class="phase-cell">${label}</td>
 
-        // Puntos
-        const lbls = (dmgData.labelMode === 'ABC') ? ["A","B","C"] : ["R","S","T"];
-        const colors = ["#ff0000", "#008000", "#0000ff", "#aaaa00", "#00aaaa", "#aa00aa"];
-
-        dmgData.points.forEach(p => {
-            let px = pad + p.x * scaleX;
-            let py = h - pad - p.y * scaleY;
+            <td>
+                <input class="dmg-input" 
+                    type="text" 
+                    value="${p.x}"
+                    data-row="${index}" data-col="0"
+                    onfocus="this.select();"
+                    oninput="this.value = this.value.replace(/[^0-9.,+*\/() ^-]/g, ''); updatePoint(${index}, 'x', this.value)"
+                    onchange="smartCalculate(this, ${index}, 'x')">
+            </td>
             
-            cx.beginPath(); cx.arc(px, py, 5, 0, Math.PI*2);
-            cx.fillStyle = colors[(p.ph-1)%6]; cx.fill();
-            
-            cx.fillStyle = "black"; cx.font = "10px Arial";
-            cx.fillText(lbls[(p.ph-1)%3], px+8, py-5);
-        });
+            <td>
+                <input class="dmg-input" 
+                    type="text" 
+                    value="${p.y}" 
+                    data-row="${index}" data-col="1"
+                    onfocus="this.select();"
+                    oninput="this.value = this.value.replace(/[^0-9.,+*\/() ^-]/g, ''); updatePoint(${index}, 'y', this.value)"
+                    onchange="smartCalculate(this, ${index}, 'y')">
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+    function updatePoint(index, field, val) {
+        // 1. Permitir estados intermedios mientras se escribe
+        if (val === '' || val === '-' || val === '-.') return; 
+        
+        // 2. Estandarizar decimales (coma a punto)
+        val = val.replace(',', '.');
 
-        // Calculo Dummy para visualizacion
-        let res = 0;
-        if(dmgData.points.length > 1) {
-            let dx = dmgData.points[1].x - dmgData.points[0].x;
-            res = Math.pow(dx * dx * dx, 1/3); // Logica dummy
+        // 3. Validación final: Si por alguna razón el filtro falló y queda algo raro, ignoramos
+        if (!/^-?\d*\.?\d*$/.test(val)) return; 
+
+        let num = parseFloat(val);
+        if (!isNaN(num)) {
+            dmgData.points[index][field] = num;
+            calculateDMG();
         }
-        document.getElementById('res_geom').innerText = "Calc...";
-        document.getElementById('res_equiv').innerText = "Wait...";
-        
-        // Simular retardo calculo real
-        setTimeout(() => {
-             document.getElementById('res_geom').innerText = (Math.random()*10).toFixed(3);
-             document.getElementById('res_equiv').innerText = (Math.random()*10).toFixed(3);
-        }, 200);
+    }
+	function smartCalculate(inputElement, index, field) {
+    let rawVal = inputElement.value.trim();
+    
+    // 1. LIMPIEZA VISUAL
+    inputElement.style.border = "1px solid transparent";
+    inputElement.style.backgroundColor = "transparent";
+
+    // 2. MANEJO DE VACÍO
+    if(rawVal === '') {
+        dmgData.points[index][field] = 0;
+        calculateDMG(); 
+        return;
     }
 
-    // ==========================================
-    // 5. PERSISTENCIA DE DATOS
-    // ==========================================
+    // 3. PREPARAR FÓRMULA (Aquí está la magia del exponente)
+    // - Comas a puntos
+    // - 'x' a '*'
+    // - '^' a '**' (Javascript usa ** para potencia)
+    let formula = rawVal
+        .replace(/,/g, '.')
+        .replace(/x/g, '*')
+        .replace(/\^/g, '**'); 
+
+    try {
+        // 4. VALIDACIÓN DE SEGURIDAD
+        // Agregamos ^ al regex de validación para que pase el filtro
+        if (/^[\d.\-\+\*\/\(\) \^]+$/.test(rawVal.replace(/x/g, '*'))) {
+            
+            // 5. EVALUACIÓN
+            let result = new Function('return ' + formula)();
+            
+            // 6. VERIFICACIÓN
+            if (isFinite(result) && !isNaN(result)) {
+                let finalVal = parseFloat(result.toFixed(4));
+                
+                inputElement.value = finalVal;
+                dmgData.points[index][field] = finalVal;
+                calculateDMG();
+                
+            } else {
+                throw new Error("Resultado inválido");
+            }
+        } else {
+            throw new Error("Caracteres inválidos");
+        }
+    } catch (e) {
+        // 7. FEEDBACK ERROR
+        console.warn("Error cálculo:", e);
+        inputElement.style.border = "1px solid #ff4444";
+        inputElement.style.backgroundColor = "rgba(255, 0, 0, 0.1)";
+    }
+}
+    // --- NAVEGACION POR TECLADO EXCEL STYLE ---
+    function handleDMGKeydown(e) {
+        if (!e.target.classList.contains('dmg-input')) return;
+
+        const currRow = parseInt(e.target.getAttribute('data-row'));
+        const currCol = parseInt(e.target.getAttribute('data-col'));
+        const totalRows = dmgData.points.length;
+        
+        let nextRow = currRow;
+        let nextCol = currCol;
+        let move = false;
+
+        switch(e.key) {
+            case 'ArrowUp':
+                if (currRow > 0) { nextRow--; move = true; }
+                break;
+            case 'ArrowDown':
+            case 'Enter': 
+                if (currRow < totalRows - 1) { nextRow++; move = true; }
+                break;
+            case 'ArrowLeft':
+                if (currCol > 0) { nextCol--; move = true; }
+                break;
+            case 'ArrowRight':
+                if (currCol < 1) { nextCol++; move = true; }
+                break;
+        }
+
+        if (move) {
+            e.preventDefault();
+            const selector = `input[data-row="${nextRow}"][data-col="${nextCol}"]`;
+            const nextInput = document.querySelector(selector);
+            if(nextInput) {
+                nextInput.focus();
+                // drawDMGGraph se llama automaticamente por el evento onfocus del input
+            }
+        }
+    }
+
+    // --- CALCULO DMG ---
+    function calculateDMG() {
+        const points = dmgData.points;
+        const Nph = dmgData.Nph;
+        
+        let DeqMat = Array(Nph + 1).fill().map(() => Array(Nph + 1).fill(0));
+        let lnDMG = 0;
+        let num_comb = (Nph * (Nph - 1)) / 2;
+
+        for (let i = 1; i < Nph; i++) {
+            let rows_i = points.filter(p => p.ph === i);
+            for (let j = i + 1; j <= Nph; j++) {
+                let rows_j = points.filter(p => p.ph === j);
+                let sum_ln = 0;
+                let nPairs = rows_i.length * rows_j.length;
+                
+                if (nPairs > 0) {
+                    rows_i.forEach(pi => {
+                        rows_j.forEach(pj => {
+                            let dx = pi.x - pj.x;
+                            let dy = pi.y - pj.y;
+                            let dist = Math.sqrt(dx*dx + dy*dy);
+                            if (dist < 1e-9) dist = 1e-9; 
+                            sum_ln += Math.log(dist);
+                        });
+                    });
+                    let lnDeq = sum_ln / nPairs;
+                    let Dij = Math.exp(lnDeq);
+                    DeqMat[i][j] = Dij; DeqMat[j][i] = Dij;
+                    lnDMG += lnDeq;
+                }
+            }
+        }
+
+        let DMG_teo = (num_comb > 0) ? Math.exp(lnDMG / num_comb) : 0;
+        let DMG_eq = DMG_teo;
+
+        if (Nph === 3) {
+            let d12 = DeqMat[1][2]; let d23 = DeqMat[2][3]; let d31 = DeqMat[3][1];
+            DMG_eq = Math.pow(d12 * d23 * d31, 1/3);
+        }
+        
+        if (Nph === 6) {
+            let g1 = [1, 4]; let g2 = [2, 5]; let g3 = [3, 6];
+            function calcGroupGMD(groupA, groupB) {
+                let s = 0;
+                s += Math.log(DeqMat[groupA[0]][groupB[0]]);
+                s += Math.log(DeqMat[groupA[0]][groupB[1]]);
+                s += Math.log(DeqMat[groupA[1]][groupB[0]]);
+                s += Math.log(DeqMat[groupA[1]][groupB[1]]);
+                return Math.exp(s / 4);
+            }
+            let res1 = calcGroupGMD(g1, g2); 
+            let res2 = calcGroupGMD(g2, g3); 
+            let res3 = calcGroupGMD(g3, g1); 
+            DMG_eq = Math.pow(res1 * res2 * res3, 1/3);
+        }
+
+        document.getElementById('res_geom').innerText = DMG_teo.toFixed(3);
+        document.getElementById('res_equiv').innerText = DMG_eq.toFixed(3);
+
+        drawDMGGraph();
+		drawDMGGraph();
+        
+        // AGREGAR ESTA LÍNEA AQUÍ: guardado de datos
+        guardarDatos();
+    }
+
+    function drawDMGGraph() {
+        const canvas = document.getElementById('dmgCanvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        
+        ctx.clearRect(0,0,w,h);
+        
+        // --- 1. Calcular Escala ---
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        dmgData.points.forEach(p => {
+            if(p.x < minX) minX = p.x; if(p.x > maxX) maxX = p.x;
+            if(p.y < minY) minY = p.y; if(p.y > maxY) maxY = p.y;
+        });
+        
+        let margin = Math.max(Math.abs(maxX - minX), Math.abs(maxY - minY)) * 0.2;
+        if(margin === 0) margin = 2;
+        minX -= margin; maxX += margin; minY -= margin; maxY += margin;
+        
+        const scX = (w - 40) / (maxX - minX);
+        const scY = (h - 40) / (maxY - minY);
+
+        // --- 2. Dibujar Ejes ---
+        ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
+        // Eje X (Y=0)
+        if(minY < 0 && maxY > 0) {
+            let zeroY = h - 20 - (0 - minY) * scY;
+            ctx.beginPath(); ctx.moveTo(0, zeroY); ctx.lineTo(w, zeroY); ctx.stroke();
+        }
+        // Eje Y (X=0)
+        if(minX < 0 && maxX > 0) {
+            let zeroX = 20 + (0 - minX) * scX;
+            ctx.beginPath(); ctx.moveTo(zeroX, 0); ctx.lineTo(zeroX, h); ctx.stroke();
+        }
+
+        // --- 3. Detectar Foco (Fila Activa) ---
+        let activeIndex = -1;
+        const activeInput = document.querySelector('.dmg-input:focus');
+        if (activeInput) {
+            activeIndex = parseInt(activeInput.getAttribute('data-row'));
+        }
+
+        // --- 4. Detectar Superposición y Dibujar Puntos ---
+        let superposicion = false;
+        const lblsABC = ["A", "B", "C", "A'", "B'", "C'"];
+        const lblsRST = ["R", "S", "T", "R'", "S'", "T'"];
+        const labels = (dmgData.labelMode === 'ABC') ? lblsABC : lblsRST;
+
+        // Comprobación simple de superposición
+        for(let i=0; i<dmgData.points.length; i++){
+            for(let j=i+1; j<dmgData.points.length; j++){
+                let p1 = dmgData.points[i];
+                let p2 = dmgData.points[j];
+                // Si la distancia es casi 0
+                if(Math.abs(p1.x - p2.x) < 0.001 && Math.abs(p1.y - p2.y) < 0.001){
+                    superposicion = true;
+                }
+            }
+        }
+
+        dmgData.points.forEach((p, index) => {
+            let cx = 20 + (p.x - minX) * scX;
+            let cy = h - 20 - (p.y - minY) * scY;
+            
+            // A) Anillo Naranja (Seleccion)
+            if (index === activeIndex) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#FFA500'; // Naranja HP
+                ctx.lineWidth = 2;
+                ctx.arc(cx, cy, 8, 0, 2 * Math.PI); 
+                ctx.stroke();
+            }
+
+            // B) Punto
+            ctx.beginPath();
+            let color = '#000';
+            if((p.ph - 1) % 3 === 0) color = '#FF0000'; // R
+            if((p.ph - 1) % 3 === 1) color = '#008000'; // S
+            if((p.ph - 1) % 3 === 2) color = '#0000FF'; // T
+            
+            ctx.strokeStyle = color; ctx.lineWidth = 2;
+            ctx.arc(cx, cy, 4, 0, 2 * Math.PI); ctx.stroke();
+            
+            // C) Etiqueta (Letra en lugar de numero)
+            ctx.fillStyle = color; ctx.font = "bold 11px Consolas, monospace";
+            let labelTxt = labels[p.ph - 1] || "?";
+            // Si hay subconductores en la misma fase, usamos letra simple para no saturar
+            // O podríamos añadir indices pequeños si quisieras
+            ctx.fillText(labelTxt, cx + 6, cy - 6);
+        });
+
+        // --- 5. Mensaje de Superposición ---
+        if(superposicion) {
+            ctx.fillStyle = "red";
+            ctx.font = "20px Segoe UI";
+            ctx.fillText("Superposicion!", 5, h - 5);
+        }
+    }
+	// ==========================================================
+    // PERSISTENCIA DE DATOS (LOCALSTORAGE)
+    // ==========================================================
+    
     function guardarDatos() {
-        localStorage.setItem('cmag_dmg', JSON.stringify(dmgData));
-        localStorage.setItem('cmag_rmg_mtx', JSON.stringify(matrix));
-        localStorage.setItem('cmag_rmg_mod', isHexMode);
+        // 1. Guardar estado de DMG
+        localStorage.setItem('cmag_dmg_data', JSON.stringify(dmgData));
+        
+        // 2. Guardar estado de RMG
+        localStorage.setItem('cmag_rmg_matrix', JSON.stringify(matrix));
+        localStorage.setItem('cmag_rmg_mode', isHexMode);
     }
 
     function cargarDatos() {
         try {
-            const sd = localStorage.getItem('cmag_dmg');
-            if(sd) {
-                dmgData = JSON.parse(sd);
-                initDMG(); // Refrescar DMG si hay datos
+            // 1. Cargar DMG
+            const savedDmg = localStorage.getItem('cmag_dmg_data');
+            if (savedDmg) {
+                dmgData = JSON.parse(savedDmg);
+                // Restaurar interfaz visual DMG
+                updateHeaderDisplays();
+                renderDMGTable();
+                calculateDMG(); // Esto redibuja el gráfico también
+                
+                // Restaurar botón de etiquetas (ABC/RST)
+                const textForButton = (dmgData.labelMode === 'ABC') ? 'RST' : 'ABC';
+                document.querySelector('.dmg-footer-btns .retro-btn').innerText = textForButton;
             }
-            const sm = localStorage.getItem('cmag_rmg_mtx');
-            if(sm) matrix = JSON.parse(sm);
+
+            // 2. Cargar RMG
+            const savedMatrix = localStorage.getItem('cmag_rmg_matrix');
+            const savedMode = localStorage.getItem('cmag_rmg_mode');
             
-            const smo = localStorage.getItem('cmag_rmg_mod');
-            if(smo) {
-                isHexMode = (smo === 'true');
+            if (savedMatrix) {
+                matrix = JSON.parse(savedMatrix);
+            }
+            if (savedMode !== null) {
+                isHexMode = (savedMode === 'true'); // Convertir string a boolean
                 document.getElementById('headerTitle').innerText = isHexMode ? "Modo Hexagonal" : "Modo Rectangular";
             }
-        } catch(e) { console.log("Error load", e); }
+            draw(); // Redibujar RMG
+
+        } catch (e) {
+            console.error("Error cargando datos guardados:", e);
+            // Si hay error, no hacemos nada y dejamos los valores por defecto
+        }
     }
 
-    // Init General
-    window.onload = function() {
-        cargarDatos();
-        initDMG(); // Render inicial en background
-    };
-
+    // CARGAR AL INICIO: Ejecutamos la carga inmediatamente
+    cargarDatos();
+	
+	// MODO DEMO WEB
+	// Sobrescribir el botón de "Ver Cálculos" (RMG y DMG)
+    // Buscamos todos los botones que digan "Ver Calculos" y forzamos el mensaje de venta
+    document.addEventListener("DOMContentLoaded", function() {
+        const proButtons = document.querySelectorAll("button");
+        proButtons.forEach(btn => {
+            if (btn.innerText.includes("Ver Calculos")) {
+                btn.onclick = function() {
+                    if (confirm("🔒 FUNCIÓN PRO\n\nEl desglose paso a paso de los cálculos (Matemática detallada) solo está disponible en la versión completa.\n\n¿Desea ir a la sección de compra?")) {
+                        // Hace scroll hasta la sección de descargas
+                        document.querySelector('.downloads-section').scrollIntoView({behavior: 'smooth'});
+                    }
+                };
+            }
+        });
+    });
 </script>
+
 </body>
 </html>
