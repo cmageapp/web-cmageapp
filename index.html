@@ -1223,7 +1223,7 @@ function renderDMGTable() {
         proButtons.forEach(btn => {
             if (btn.innerText.includes("Ver Calculos")) {
                 btn.onclick = function() {
-                    if (confirm("🔒 FUNCIÓN PRO\n\nEl desglose paso a paso de los cálculos (Matemática detallada) solo está disponible en la versión completa.\n\n¿Desea ir a la sección de compra?")) {
+                    if (confirm("FUNCIÓN PRO en APK")) {
                         // Hace scroll hasta la sección de descargas
                         document.querySelector('.downloads-section').scrollIntoView({behavior: 'smooth'});
                     }
@@ -1235,3 +1235,4 @@ function renderDMGTable() {
 
 </body>
 </html>
+
