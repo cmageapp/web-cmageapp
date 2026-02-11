@@ -293,6 +293,32 @@
         .btn-buy { display: inline-block; margin-top: 15px; color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
 
         @media (max-width: 768px) { .workspace-grid { grid-template-columns: 1fr; } }
+		
+		/*Animaciones*/
+		/* --- NUEVAS ANIMACIONES DE INTERACTIVIDAD --- */
+
+/* 1. Efecto Hover en las tarjetas principales */
+.calc-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.calc-card:hover {
+    transform: translateY(-5px); /* Se levanta un poco */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Sombra más fuerte */
+    border-color: var(--accent); /* Borde se ilumina azul */
+}
+
+/* 2. Animación de "Latido" para invitar al clic */
+@keyframes invitePulse {
+    0% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(88, 166, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); }
+}
+
+/* Clase que aplicaremos por JS y quitaremos al interactuar */
+.interactive-hint {
+    animation: invitePulse 2s infinite;
+    border-radius: 4px;
+}
     </style>
 </head>
 <body>
@@ -1276,9 +1302,35 @@ function renderDMGTable() {
             }
         });
     });
+	
+	// ==========================================================
+    // ANIMACIÓN DE INVITACIÓN (UX)
+    // ==========================================================
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // 1. Seleccionamos las áreas calientes
+        const canvasRMG = document.getElementById('matrixCanvas');
+        const containerDMG = document.getElementById('dmgContainer');
+
+        // 2. Agregamos la clase de animación
+        canvasRMG.classList.add('interactive-hint');
+        containerDMG.classList.add('interactive-hint');
+
+        // 3. Función para limpiar la animación al primer toque
+        function removeHint(element) {
+            element.classList.remove('interactive-hint');
+        }
+
+        // 4. Listeners para RMG (Click o Teclado)
+        canvasRMG.addEventListener('click', () => removeHint(canvasRMG), {once:true});
+        canvasRMG.addEventListener('keydown', () => removeHint(canvasRMG), {once:true});
+
+        // 5. Listeners para DMG (Click dentro del contenedor)
+        containerDMG.addEventListener('click', () => removeHint(containerDMG), {once:true});
+        // Si tocan un input dentro de DMG
+        containerDMG.addEventListener('focusin', () => removeHint(containerDMG), {once:true});
+    });
 </script>
 
 </body>
 </html>
-
-
