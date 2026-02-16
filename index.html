@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de RMG y DMG</title>
-	<link rel="icon" type="image/png" href="PLTicon.png" sizes="192x192">
-    <link rel="apple-touch-icon" href="PLTicon.png">
+	<link rel="icon" type="image/png" href="PLTicon.png?v=2" sizes="192x192">
+    <link rel="apple-touch-icon" href="PLTicon.png?v=2">
 	<meta name="description" content="Calculadora profesional de RMG (Radio Medio Geométrico) y DMG (Distancia Media Geométrica) para Ingeniería Eléctrica. Herramienta para cálculo de Líneas de Transmisión. CMAG eApp por Ingenieros de FIUNA.">
     <meta name="keywords" content="RMG, DMG, Calculadora RMG, Calculadora DMG, GMR Calculator, GMD Calculator, Ingeniería Eléctrica, Líneas de Transmisión, Inductancia, Capacitancia, CMAG, eApp, CMAG eApp, FIUNA, Paraguay">
     <meta name="author" content="CMAG Ingeniería">
@@ -393,7 +393,7 @@
                         </div>
                     </div>
                     <div class="footer-result">
-                        <button id="btnVer" class="btn-menu" style="color: #00FF00;" onclick="alert('Función Pro en APK')"> Ver Calculos</button>
+                        <button id="btnVer" class="btn-menu" style="color: #00FF00;" onclick="alert('Función solo en APK')"> Ver Calculos</button>
                         <button id="btnSalir" class="btn-menu" style="color: #FFFF00;" onclick="volverEditor()"> Salir</button>
                     </div>
                 </div>
@@ -476,7 +476,7 @@
                             
                             <div class="dmg-footer-btns">
                                 <button class="retro-btn" onclick="toggleLabels()">RST</button>
-                                <button class="retro-btn" onclick="alert('Función Pro en APK')"> Ver Calculos</button>
+                                <button class="retro-btn" onclick="alert('Función disponible solo en la APP')"> Ver Calculos</button>
                             </div>
                         </div>
                     </div>
@@ -506,6 +506,7 @@
     <p style="font-size:0.9rem; color:#8b949e;">Calculadora RMG con paso a paso de cálculos realizados.</p>
     <p style="font-size:0.9rem; color:#8b949e;">Calculadora DMG con paso a paso de cálculos realizados.</p>
     <p style="font-size:0.9rem; color:#8b949e;">Fórmulas, unidades, tablas y guías didácticas.</p>
+	<p style="font-size:0.9rem; color:#8b949e;">Generación de informes técnicos en PDF con cálculos y resultados</p>
     <p style="font-size:0.9rem; color:#8b949e;">Port para la calculadora gráfica HP Prime G2.</p>
     <a href="https://play.google.com/store/apps/details?id=com.cmag.plt" target="_blank" rel="noopener noreferrer" class="btn-buy">
     <i class="fab fa-android"></i> OBTENER AHORA <i class="fab fa-google-play" style="margin-left: 8px;"></i>
@@ -529,7 +530,7 @@
         </p>
         <ul style="list-style: none; padding: 0; margin: 15px 0; text-align: left; display: inline-block;">
             <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Recopilación de Datos:</strong> No recopilamos datos personales identificables (nombre, email, teléfono).</li>
-            <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Procesamiento Local:</strong> Los cálculos de ingeniería se realizan exclusivamente en el procesador de su dispositivo.</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Procesamiento Local:</strong> Los cálculos de técnicos se realizan exclusivamente en su dispositivo.</li>
             <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Permisos:</strong> El acceso al almacenamiento se usa estrictamente para guardar los archivos técnicos y reportes PDF generados por el usuario.</li>
             </ul>
         
@@ -1307,7 +1308,7 @@ function renderDMGTable() {
         proButtons.forEach(btn => {
             if (btn.innerText.includes("Ver Calculos")) {
                 btn.onclick = function() {
-                    if (confirm("FUNCIÓN PRO en APK")) {
+                    if (confirm("Función disponible solo en la APP")) {
                         // Hace scroll hasta la sección de descargas
                         document.querySelector('.downloads-section').scrollIntoView({behavior: 'smooth'});
                     }
@@ -1347,6 +1348,3 @@ function renderDMGTable() {
 
 </body>
 </html>
-
-
-
