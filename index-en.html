@@ -1,24 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="en"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de RMG y DMG</title>
-	<link rel="icon" type="image/png" href="PLTicon.png?v=2" sizes="192x192">
+    <title>GMR & GMD Calculator</title> <link rel="icon" type="image/png" href="PLTicon.png?v=2" sizes="192x192">
     <link rel="apple-touch-icon" href="PLTicon.png?v=2">
-	<meta name="description" content="Calculadora profesional de RMG (Radio Medio Geométrico) y DMG (Distancia Media Geométrica) para Ingeniería Eléctrica. Herramienta para cálculo de Líneas de Transmisión. CMAG eApp por Ingenieros de FIUNA.">
-    <meta name="keywords" content="RMG, DMG, Calculadora RMG, Calculadora DMG, GMR Calculator, GMD Calculator, Ingeniería Eléctrica, Líneas de Transmisión, Inductancia, Capacitancia, CMAG, eApp, CMAG eApp, FIUNA, Paraguay">
-    <meta name="author" content="CMAG Ingeniería">
+    <meta name="description" content="Professional GMR (Geometric Mean Radius) and GMD (Geometric Mean Distance) calculator for Electrical Engineering. Transmission Lines calculation tool. CMAG eApp."> <meta name="keywords" content="GMR, GMD, GMR Calculator, GMD Calculator, Electrical Engineering, Transmission Lines, Inductance, Capacitance, Bundled Conductors, CMAG eApp"> <meta name="author" content="CMAG Engineering">
     <meta name="robots" content="index, follow">
-	
-	<meta name="google-site-verification" content="google43e9655db863b0dc" />
-	
+    
+    <meta name="google-site-verification" content="google43e9655db863b0dc" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <link rel="alternate" hreflang="es" href="https://www.cmageapp.com/index.html" />
     <link rel="alternate" hreflang="en" href="https://www.cmageapp.com/index-en.html" />
     <link rel="alternate" hreflang="x-default" href="https://www.cmageapp.com/index.html" />
-	
-	<style>
+    
+    <style>
         :root {
             --bg: #0d1117;
             --card: #161b22;
@@ -77,6 +74,12 @@
             min-height: auto; 
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .calc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border-color: var(--accent);
         }
 
         .retro-app-container {
@@ -90,7 +93,7 @@
         /* ESTILOS ESPECIFICOS DMG RETRO (ESTILO IMAGEN) */
         .dmg-app-container {
             background: #222; 
-            font-family: 'Segoe UI', Tahoma, sans-serif; /* Fuente más parecida a la imagen */
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
             flex-direction: column;
             min-height: 400px;
@@ -99,11 +102,11 @@
 
         /* BARRA SUPERIOR */
         .dmg-top-bar {
-            background: #202020; /* Fondo casi negro */
+            background: #202020;
             color: #ccc;
             padding: 5px 10px;
             display: flex;
-            justify-content: space-between; /* Titulo izq, controles der */
+            justify-content: space-between;
             align-items: flex-end;
             border-bottom: 1px solid #444;
             height: 45px;
@@ -147,14 +150,13 @@
 
         /* TABLA IZQUIERDA */
         .dmg-table-container {
-            flex: 0.8; background: #333; /* Fondo cabecera tabla */
+            flex: 0.8; background: #333;
             overflow-y: auto; max-height: 400px;
             display: flex; flex-direction: column;
         }
         
         table#coordsTable { width: 100%; border-collapse: collapse; background: #fff; font-size: 0.9rem; }
         
-        /* Cabeceras estilo imagen */
         table#coordsTable th { 
             background: #333; 
             color: #ddd; 
@@ -169,10 +171,9 @@
         table#coordsTable td { border-bottom: none; padding: 0; height: 24px; vertical-align: middle; }
         table#coordsTable tr:nth-child(even) { background-color: #fff; }
         
-        /* Inputs Excel Style */
         .dmg-input {
             width: 100%; height: 100%;
-            border: 1px solid transparent; /* Invisible por defecto */
+            border: 1px solid transparent;
             background: transparent; 
             color: black;
             font-family: inherit; font-size: 1rem; 
@@ -181,7 +182,6 @@
             outline: none;
         }
         
-        /* EL BORDE AZUL DE SELECCION */
         .dmg-input:focus { 
             border: 2px solid #0000FF; 
             background-color: #fff;
@@ -192,7 +192,7 @@
             font-weight: normal; 
             padding-left: 5px !important; 
             color: #000; 
-            background: #f0f0f0; /* Gris muy clarito para la columna fase */
+            background: #f0f0f0;
             border-right: 1px solid #ccc;
         }
 
@@ -210,7 +210,7 @@
 
         /* RESULTADOS */
         .dmg-results-box {
-            background: #E8F4FC; /* Azul muy pálido exacto a la imagen */
+            background: #E8F4FC;
             padding: 8px; 
             display: flex; flex-direction: column; gap: 2px;
             font-family: 'Segoe UI', sans-serif;
@@ -234,7 +234,7 @@
         .retro-btn:hover { background: #d0d0d0; }
         .retro-btn:active { background: #bbb; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1); }
 
-        /* --- PANTALLA 1: EDITOR (RMG - Mantenido igual) --- */
+        /* --- PANTALLA 1: EDITOR (RMG) --- */
         #screen-editor { display: flex; flex-direction: column; flex: 1; background: var(--hp-white); }
         .header-editor {
             background: var(--hp-blue); color: var(--hp-white);
@@ -262,10 +262,9 @@
         .footer-result { background: #404040; display: flex; padding: 0; width: 100%; }
 
         /* --- COLUMNA DERECHA GENERAL --- */
-        /* HEADER DE LAS TARJETAS */
         .card-header-modern { 
             display: flex; 
-            justify-content: space-between; /* ESTO EMPUJA LA VERSIÓN A LA DERECHA */
+            justify-content: space-between; 
             align-items: center; 
             padding: 15px 20px; 
             border-bottom: 1px solid var(--border); 
@@ -275,65 +274,39 @@
             margin: 0; 
             color: var(--accent); 
             font-size: 1.1rem;
-            display: flex;       /* Para alinear icono y texto */
+            display: flex; 
             align-items: center; 
         }
 
-        /* ETIQUETA DE VERSIÓN (Pequeña y separada) */
         .modern-badge { 
             background: #23863644; 
             color: #3fb950; 
             padding: 3px 8px;
             border-radius: 4px; 
-            font-size: 0.55rem;     /* Texto pequeño */
-            letter-spacing: 1.5px;  /* Letras separadas */
+            font-size: 0.55rem; 
+            letter-spacing: 1.5px; 
             font-weight: bold;
-            white-space: nowrap;    /* Evita que se rompa en dos líneas */
+            white-space: nowrap; 
         }
-        /* DESCARGAS */
+        
         .downloads-section { grid-column: 1 / -1; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px; }
         .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .app-item { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 10px; text-align: left; }
-        .btn-buy { display: inline-block; margin-top: 15px; color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; }
+        .btn-buy { display: inline-block; margin-top: 15px; color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: bold; transition: transform 0.2s ease, background-color 0.2s ease;}
+        .btn-buy:hover { background-color: rgba(63, 185, 80, 0.1); transform: scale(1.05); }
 
         @media (max-width: 768px) { .workspace-grid { grid-template-columns: 1fr; } }
-		
-		/*Animaciones*/
-		/* --- NUEVAS ANIMACIONES DE INTERACTIVIDAD --- */
+        
+        @keyframes invitePulse {
+            0% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(88, 166, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); }
+        }
 
-/* 1. Efecto Hover en las tarjetas principales */
-.calc-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.calc-card:hover {
-    transform: translateY(-5px); /* Se levanta un poco */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Sombra más fuerte */
-    border-color: var(--accent); /* Borde se ilumina azul */
-}
-
-/* 2. Animación de "Latido" para invitar al clic */
-@keyframes invitePulse {
-    0% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(88, 166, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); }
-}
-
-/* Clase que aplicaremos por JS y quitaremos al interactuar */
-.interactive-hint {
-    animation: invitePulse 2s infinite;
-    border-radius: 4px;
-}
-
-/* Añade la transición a tu clase base si no la tienes */
-.btn-buy {
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-/* El efecto al pasar el cursor */
-.btn-buy:hover {
-    background-color: rgba(63, 185, 80, 0.1); /* Fondo verde semitransparente */
-    transform: scale(1.05); /* Aumenta el tamaño un 5% */
-}
+        .interactive-hint {
+            animation: invitePulse 2s infinite;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -351,54 +324,54 @@
                 <h3>
                     <svg width="34" height="34" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin-right: 12px;">
                         <g fill="none" stroke="#58a6ff">
-                            <circle cx="50" cy="50" r="46" stroke-width="4" />
+                            <circle cx="50" cy="50" r="46" stroke-width="4" /></circle>
                             
                             <g stroke-width="6" transform="rotate(30, 50, 50)">
-                                <circle cx="50" cy="50" r="13" />
-                                <circle cx="50" cy="22" r="13" />
-                                <circle cx="74" cy="36" r="13" />
-                                <circle cx="74" cy="64" r="13" />
-                                <circle cx="50" cy="78" r="13" />
-                                <circle cx="26" cy="64" r="13" />
-                                <circle cx="26" cy="36" r="13" />
+                                <circle cx="50" cy="50" r="13" /></circle>
+                                <circle cx="50" cy="22" r="13" /></circle>
+                                <circle cx="74" cy="36" r="13" /></circle>
+                                <circle cx="74" cy="64" r="13" /></circle>
+                                <circle cx="50" cy="78" r="13" /></circle>
+                                <circle cx="26" cy="64" r="13" /></circle>
+                                <circle cx="26" cy="36" r="13" /></circle>
                             </g>
                         </g>
                     </svg>
-                    Calculadora de RMG
+                    GMR Calculator
                 </h3>
                 
-                <span class="modern-badge">vPLT_Module_RMG</span>
+                <span class="modern-badge">vPLT_Module_GMR</span>
             </div>
 
             <div class="retro-app-container">
                 <div id="screen-editor">
-                    <div class="header-editor"><span id="headerTitle">Modo Rectangular</span></div>
-                    <canvas id="matrixCanvas" width="900" height="850" tabindex="0"></canvas>
+                    <div class="header-editor"><span id="headerTitle">Rectangular Mode</span></div>
+                    <canvas id="matrixCanvas" width="900" height="850" tabindex="0" class="interactive-hint"></canvas>
                     <div class="footer-editor">
-                        <button id="btnModo" class="btn-menu" style="color: #FFFFFF;" onclick="toggleMode()"> Modo</button>
+                        <button id="btnModo" class="btn-menu" style="color: #FFFFFF;" onclick="toggleMode()"> Mode</button>
                         <button id="btnReset" class="btn-menu" style="color: #FFFF00;" onclick="resetMatrix()"> Reset</button>
-                        <button id="btnOk" class="btn-menu" style="color: #00FF00;" onclick="calcularGMR()"> Ok</button>
+                        <button id="btnOk" class="btn-menu" style="color: #00FF00;" onclick="calcularGMR()"> Calc</button>
                     </div>
                 </div>
 
                 <div id="screen-result">
-                    <div class="header-result"> RMG del Conductor (en funcion al radio)</div>
+                    <div class="header-result"> Conductor GMR (as function of radius)</div>
                     <div class="result-body">
                         <div class="result-data">
-                            <span class="label-blue">RMG (Ds):</span>
+                            <span class="label-blue">GMR (Ds):</span>
                             <span class="main-ds" id="val_ds">Ds = 0.000000 * r</span>
-                            <span class="config-label">Configuracion:</span>
-                            <span class="config-val" id="val_hilos">Hilos: 0</span>
-                            <span class="config-val">Radio de un hilo = r</span>
+                            <span class="config-label">Configuration:</span>
+                            <span class="config-val" id="val_hilos">Strands: 0</span>
+                            <span class="config-val">Strand radius = r</span>
                         </div>
                         <div class="result-graphic">
                             <canvas id="miniGeoCanvas" width="100" height="100"></canvas>
-                            <span class="geo-label">Geometria de hilos</span>
+                            <span class="geo-label">Strand Geometry</span>
                         </div>
                     </div>
                     <div class="footer-result">
-                        <button id="btnVer" class="btn-menu" style="color: #00FF00;" onclick="alert('Función solo en la APP')"> Ver Calculos</button>
-                        <button id="btnSalir" class="btn-menu" style="color: #FFFF00;" onclick="volverEditor()"> Salir</button>
+                        <button id="btnVer" class="btn-menu" style="color: #00FF00;" onclick="alert('Pro Feature in APP')"> View Calcs</button>
+                        <button id="btnSalir" class="btn-menu" style="color: #FFFF00;" onclick="volverEditor()"> Back</button>
                     </div>
                 </div>
             </div> 
@@ -408,19 +381,19 @@
             <div class="card-header-modern">
                 <h3>
                     <i class="fas fa-calculator" style="margin-right: 12px; font-size: 1.5rem;"></i> 
-                    Calculadora de DMG
+                    GMD Calculator
                 </h3>
-                <span class="modern-badge" style="background:#d2a8ff44; color:#d2a8ff;">vPLT_Module_DMG_Live</span>
+                <span class="modern-badge" style="background:#d2a8ff44; color:#d2a8ff;">vPLT_Module_GMD_Live</span>
             </div>
 
-            <div class="dmg-app-container" id="dmgContainer" tabindex="0">
+            <div class="dmg-app-container interactive-hint" id="dmgContainer" tabindex="0">
                 
                 <div class="dmg-top-bar">
-                    <div class="dmg-title">Calculadora de DMG</div>
+                    <div class="dmg-title">GMD Calculator</div>
                     
                     <div class="dmg-controls-wrapper">
                         <div class="ctrl-group">
-                            <span class="ctrl-label">Nº de Fases</span>
+                            <span class="ctrl-label">Phases</span>
                             <div class="ctrl-btn-group">
                                 <button onclick="changePhases(-1)">-</button>
                                 <span id="disp_nph" class="ctrl-val">3</span>
@@ -428,7 +401,7 @@
                             </div>
                         </div>
                         <div class="ctrl-group">
-                            <span class="ctrl-label">Selector Fase</span>
+                            <span class="ctrl-label">Phase Sel.</span>
                             <div class="ctrl-btn-group">
                                 <button onclick="changeSelPhase(-1)">-</button>
                                 <span id="disp_sel" class="ctrl-val" style="background:#FFFF00; color:black;">1</span>
@@ -436,7 +409,7 @@
                             </div>
                         </div>
                         <div class="ctrl-group">
-                            <span class="ctrl-label">Nº Conductor</span>
+                            <span class="ctrl-label">Subcond.</span>
                             <div class="ctrl-btn-group">
                                 <button onclick="changeSubCond(-1)">-</button>
                                 <span id="disp_nsub" class="ctrl-val">1</span>
@@ -451,13 +424,12 @@
                         <table id="coordsTable">
                             <thead>
                                 <tr>
-                                    <th style="width: 40px;">Fase</th>
+                                    <th style="width: 40px;">Phase</th>
                                     <th>X</th>
                                     <th>Y</th>
                                 </tr>
                             </thead>
-                            <tbody id="coordsBody">
-                                </tbody>
+                            <tbody id="coordsBody"></tbody>
                         </table>
                     </div>
 
@@ -467,20 +439,20 @@
                         </div>
                         
                         <div class="dmg-results-box">
-                            <div class="res-header">Resultados:</div>
-                            <div class="res-header">(Misma Unidades Coordenadas)</div>
+                            <div class="res-header">Results:</div>
+                            <div class="res-header">(Same Units as Coordinates)</div>
                             <div class="res-row">
-                                <span>DMG Geometrico:</span>
-                                <span id="res_geom" class="res-val">---</span>
+                                <span>Theoretical GMD:</span>
+                                <span id="res_geom" class="res-val">6.300</span>
                             </div>
                             <div class="res-row">
-                                <span>DMG Equivalente:</span>
-                                <span id="res_equiv" class="res-val-highlight">---</span>
+                                <span>Equivalent GMD:</span>
+                                <span id="res_equiv" class="res-val-highlight">6.300</span>
                             </div>
                             
                             <div class="dmg-footer-btns">
                                 <button class="retro-btn" onclick="toggleLabels()">RST</button>
-                                <button class="retro-btn" onclick="alert('Función disponible solo en la APP')"> Ver Calculos</button>
+                                <button class="retro-btn" onclick="alert('Pro Feature in APP')"> View Calcs</button>
                             </div>
                         </div>
                     </div>
@@ -491,12 +463,12 @@
     </div>
 
     <div class="downloads-section">
-        <h3 style="color:white; margin-bottom:20px;">Versiones Completas (Android)</h3>
+        <h3 style="color:white; margin-bottom:20px;">Full Versions (Android)</h3>
         <div class="app-grid">
             <div class="app-item">
     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
         
-        <img src="PLTicon.png" alt="Icono PLT" style="width: 80px; height: 80px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+        <img src="PLTicon.png" alt="PLT Icon" style="width: 80px; height: 80px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
         
         <div style="display: flex; flex-direction: column; justify-content: center;">
             <h3 style="margin: 0; color: var(--accent); font-size: 1.5rem; line-height: 1.2;">PLT</h3>
@@ -505,22 +477,21 @@
 
     </div>
 
-    <p style="font-size:0.9rem; color:#8b949e;">Cálculo completo de Inductancia y Capacitancia.</p>
-    <p style="font-size:0.9rem; color:#8b949e;">Guía paso a paso y tablas de Resistencia de conductores ACSR/AAC.</p>
-    <p style="font-size:0.9rem; color:#8b949e;">Calculadora RMG con paso a paso de cálculos realizados.</p>
-    <p style="font-size:0.9rem; color:#8b949e;">Calculadora DMG con paso a paso de cálculos realizados.</p>
-    <p style="font-size:0.9rem; color:#8b949e;">Fórmulas, unidades, tablas y guías didácticas.</p>
-	<p style="font-size:0.9rem; color:#8b949e;">Generación de informes técnicos en PDF con cálculos y resultados.</p>
-    <p style="font-size:0.9rem; color:#8b949e;">Port para la calculadora gráfica HP Prime G2.</p>
+    <p style="font-size:0.9rem; color:#8b949e;">Complete Inductance and Capacitance calculation.</p>
+    <p style="font-size:0.9rem; color:#8b949e;">Step-by-step guide and ACSR/AAC conductor resistance tables.</p>
+    <p style="font-size:0.9rem; color:#8b949e;">GMR calculator with step-by-step breakdown.</p>
+    <p style="font-size:0.9rem; color:#8b949e;">GMD calculator with step-by-step breakdown.</p>
+    <p style="font-size:0.9rem; color:#8b949e;">Formulas, units, tables, and educational guides.</p>
+    <p style="font-size:0.9rem; color:#8b949e;">Port available for the HP Prime G2 graphing calculator.</p>
     <a href="https://play.google.com/store/apps/details?id=com.cmag.plt" target="_blank" rel="noopener noreferrer" class="btn-buy">
-    <i class="fab fa-android"></i> OBTENER AHORA <i class="fab fa-google-play" style="margin-left: 8px;"></i>
+    <i class="fab fa-android"></i> GET IT NOW <i class="fab fa-google-play" style="margin-left: 8px;"></i>
 </a>
 </div>
             <div class="app-item">
-                <h3 style="margin:0; color:#d2a8ff;">Proximamente</h3>
+                <h3 style="margin:0; color:#d2a8ff;">Coming Soon</h3>
                 <span style="color:#3fb950; font-size:0.8rem;">GS/USD</span>
-                <p style="font-size:0.9rem; color:#8b949e;">Herramienta avanzada para dimensionamiento de Instalaciones Industriales.</p>
-                <a href="#" class="btn-buy" style="color:#d2a8ff;"><i class="fab fa-android"></i> OBTENER AHORA</a>
+                <p style="font-size:0.9rem; color:#8b949e;">Advanced sizing tool for Industrial Installations.</p>
+                <a href="#" class="btn-buy" style="color:#d2a8ff;"><i class="fab fa-android"></i> GET IT NOW</a>
             </div>
         </div>
     </div>
@@ -528,23 +499,23 @@
 
   <footer id="privacy" style="margin-top: 50px; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; text-align: center; color: #8b949e; font-size: 0.8rem;">
     <div style="max-width: 800px; margin: 0 auto; line-height: 1.6;">
-        <h4 style="color: white; margin-bottom: 15px;">Política de Privacidad</h4>
+        <h4 style="color: white; margin-bottom: 15px;">Privacy Policy</h4>
         <p>
-            Las aplicaciones son herramientas de cálculo técnico.
+            These applications are technical calculation tools.
         </p>
         <ul style="list-style: none; padding: 0; margin: 15px 0; text-align: left; display: inline-block;">
-            <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Recopilación de Datos:</strong> No recopilamos datos personales identificables (nombre, email, teléfono).</li>
-            <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Procesamiento Local:</strong> Los cálculos de técnicos se realizan exclusivamente en su dispositivo.</li>
-            <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Permisos:</strong> El acceso al almacenamiento se usa estrictamente para guardar los archivos técnicos y reportes PDF generados por el usuario.</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Data Collection:</strong> We do not collect personally identifiable information (name, email, phone).</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Local Processing:</strong> Engineering calculations are performed exclusively on your device's processor.</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i> <strong>Permissions:</strong> Storage access is strictly used to save technical files and user-generated PDF reports.</li>
             </ul>
         
         <p style="margin-top: 15px; font-size: 0.9rem;">
-            <strong>Contacto para soporte:</strong><br>
+            <strong>Support Contact:</strong><br>
             <a href="mailto:cmageapp@gmail.com" style="color: var(--accent); text-decoration: none;">cmageapp@gmail.com</a>
         </p>
 
         <p style="margin-top: 15px;">
-            Al utilizar las aplicaciones, el usuario acepta los términos de esta política.
+            By using our applications, the user agrees to the terms of this policy.
         </p>
         <p style="margin-top: 30px; border-top: 1px solid #30363d; padding-top: 20px;">
             © 2026 CMAG eApp
@@ -553,9 +524,8 @@
   </footer>
   
 <script>
-  
     // ==========================================================
-    // CODIGO CALCULADORA RMG (ORIGINAL)
+    // CODIGO CALCULADORA RMG 
     // ==========================================================
     const ROWS = 7; const COLS = 7;
     let matrix = []; let isHexMode = false;
@@ -575,7 +545,6 @@
     const SPACING = 106; const RADIUS = 50; 
 
     resetMatrix();
-    // No forzamos focus onload para no molestar la navegacion del nuevo modulo
 
     function draw() {
         ctx.fillStyle = C_BLANCO; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -623,15 +592,12 @@
         }
     }
 
-    // MANEJO TECLADO GLOBAL (Con filtro para RMG)
     window.addEventListener('keydown', function(e) {
-        // Si el foco está dentro del contenedor DMG, NO ejecutar logica RMG
         if (document.getElementById('dmgContainer').contains(document.activeElement)) {
             handleDMGKeydown(e);
             return; 
         }
 
-        // Si es un input normal (fuera de DMG), ignorar
         if(e.target.tagName === 'INPUT' && !e.target.classList.contains('dmg-input')) return;
 
         if (currentScreen === 'EDITOR') {
@@ -722,9 +688,8 @@
                     cursorRow = i; cursorCol = j;
                     updateButtonVisuals();
                     draw();
-					// AGREGAR ESTA LÍNEA AQUÍ: guardado de datos
                     guardarDatos();
-					return;
+                    return;
                 }
             }
         }
@@ -732,9 +697,9 @@
 
     function toggleMode() { 
         isHexMode = !isHexMode; 
-        document.getElementById('headerTitle').innerText = isHexMode ? "Modo Hexagonal" : "Modo Rectangular"; 
+        document.getElementById('headerTitle').innerText = isHexMode ? "Hexagonal Mode" : "Rectangular Mode"; 
         draw();
-        guardarDatos(); // <--- AGREGAR guardado de datos		
+        guardarDatos();     
         if(editorZone === 'GRID') canvas.focus();
     }
     
@@ -754,7 +719,7 @@
         editorZone = 'GRID';
         updateButtonVisuals();
         draw();
-		guardarDatos(); // <--- AGREGAR guardado de datos
+        guardarDatos(); 
     }
 
     function calcularGMR() {
@@ -774,7 +739,7 @@
             }
         }
         const n = points.length;
-        if (n === 0) { alert("Selecciona al menos un hilo"); return; }
+        if (n === 0) { alert("Select at least one strand"); return; }
 
         let sumLogDist = 0; const r_prime = Math.exp(-0.25);
         for (let i = 0; i < n; i++) {
@@ -786,7 +751,7 @@
         const Ds = Math.exp((1 / (n * n)) * sumLogDist);
         
         document.getElementById('val_ds').innerText = "Ds = " + Ds.toFixed(6) + " * r";
-        document.getElementById('val_hilos').innerText = "Hilos: " + n;
+        document.getElementById('val_hilos').innerText = "Strands: " + n;
         drawMiniGeo(points);
 
         document.getElementById('screen-editor').style.display = 'none';
@@ -831,8 +796,8 @@
         });
     }
 
-// ==========================================================
-    // CODIGO CALCULADORA DMG (NUEVA LOGICA + NAVEGACION)
+    // ==========================================================
+    // CODIGO CALCULADORA DMG 
     // ==========================================================
     let dmgData = {
         Nph: 3,
@@ -845,7 +810,6 @@
         labelMode: 'ABC'
     };
 
-    // Inicialización DMG
     initDMG();
 
     function initDMG() {
@@ -853,7 +817,6 @@
         calculateDMG(); 
     }
 
-    // --- CONTROLES DMG ---
     function changePhases(delta) {
         let newN = dmgData.Nph + delta;
         if (newN < 2 || newN > 6) return;
@@ -915,21 +878,13 @@
     }
 
     function toggleLabels() {
-        // 1. Cambiamos el modo interno (Si era ABC pasa a RST, y viceversa)
         dmgData.labelMode = (dmgData.labelMode === 'ABC') ? 'RST' : 'ABC';
-
-        // 2. Definimos qué mostrar en el botón (Lo OPUESTO al modo actual)
-        // Si ahora estoy en ABC -> El botón debe decir "RST" para invitar a cambiar
         const textForButton = (dmgData.labelMode === 'ABC') ? 'RST' : 'ABC';
         document.querySelector('.dmg-footer-btns .retro-btn').innerText = textForButton;
-
-        // 3. Renderizar
         renderDMGTable();
         calculateDMG();
     }
 
-    // --- TABLA Y EDICION DMG ---
-// --- TABLA Y EDICION DMG (VERSIÓN TECLADO COMPLETO) ---
 function renderDMGTable() {
     const tbody = document.getElementById('coordsBody');
     tbody.innerHTML = '';
@@ -948,11 +903,6 @@ function renderDMGTable() {
         if(totalInPhase > 1) label += "." + countMap[p.ph];
 
         let tr = document.createElement('tr');
-        
-        // --- CAMBIO CLAVE EN EL REGEX ---
-        // Usamos: /[^0-9.,+*\/() -]/g
-        // 1. La barra de dividir '/' tiene una contra barra '\' antes para que no cierre el regex.
-        // 2. El guion '-' está AL FINAL DE TODO. Esto evita que rompa el código.
         
         tr.innerHTML = `
             <td class="phase-cell">${label}</td>
@@ -981,13 +931,8 @@ function renderDMGTable() {
     });
 }
     function updatePoint(index, field, val) {
-        // 1. Permitir estados intermedios mientras se escribe
         if (val === '' || val === '-' || val === '-.') return; 
-        
-        // 2. Estandarizar decimales (coma a punto)
         val = val.replace(',', '.');
-
-        // 3. Validación final: Si por alguna razón el filtro falló y queda algo raro, ignoramos
         if (!/^-?\d*\.?\d*$/.test(val)) return; 
 
         let num = parseFloat(val);
@@ -996,38 +941,28 @@ function renderDMGTable() {
             calculateDMG();
         }
     }
-	function smartCalculate(inputElement, index, field) {
+    function smartCalculate(inputElement, index, field) {
     let rawVal = inputElement.value.trim();
     
-    // 1. LIMPIEZA VISUAL
     inputElement.style.border = "1px solid transparent";
     inputElement.style.backgroundColor = "transparent";
 
-    // 2. MANEJO DE VACÍO
     if(rawVal === '') {
         dmgData.points[index][field] = 0;
         calculateDMG(); 
         return;
     }
 
-    // 3. PREPARAR FÓRMULA (Aquí está la magia del exponente)
-    // - Comas a puntos
-    // - 'x' a '*'
-    // - '^' a '**' (Javascript usa ** para potencia)
     let formula = rawVal
         .replace(/,/g, '.')
         .replace(/x/g, '*')
         .replace(/\^/g, '**'); 
 
     try {
-        // 4. VALIDACIÓN DE SEGURIDAD
-        // Agregamos ^ al regex de validación para que pase el filtro
         if (/^[\d.\-\+\*\/\(\) \^]+$/.test(rawVal.replace(/x/g, '*'))) {
             
-            // 5. EVALUACIÓN
             let result = new Function('return ' + formula)();
             
-            // 6. VERIFICACIÓN
             if (isFinite(result) && !isNaN(result)) {
                 let finalVal = parseFloat(result.toFixed(4));
                 
@@ -1036,19 +971,17 @@ function renderDMGTable() {
                 calculateDMG();
                 
             } else {
-                throw new Error("Resultado inválido");
+                throw new Error("Invalid Result");
             }
         } else {
-            throw new Error("Caracteres inválidos");
+            throw new Error("Invalid Characters");
         }
     } catch (e) {
-        // 7. FEEDBACK ERROR
-        console.warn("Error cálculo:", e);
+        console.warn("Calculation Error:", e);
         inputElement.style.border = "1px solid #ff4444";
         inputElement.style.backgroundColor = "rgba(255, 0, 0, 0.1)";
     }
 }
-    // --- NAVEGACION POR TECLADO EXCEL STYLE ---
     function handleDMGKeydown(e) {
         if (!e.target.classList.contains('dmg-input')) return;
 
@@ -1082,12 +1015,10 @@ function renderDMGTable() {
             const nextInput = document.querySelector(selector);
             if(nextInput) {
                 nextInput.focus();
-                // drawDMGGraph se llama automaticamente por el evento onfocus del input
             }
         }
     }
 
-    // --- CALCULO DMG ---
     function calculateDMG() {
         const points = dmgData.points;
         const Nph = dmgData.Nph;
@@ -1149,9 +1080,6 @@ function renderDMGTable() {
         document.getElementById('res_equiv').innerText = DMG_eq.toFixed(3);
 
         drawDMGGraph();
-		drawDMGGraph();
-        
-        // AGREGAR ESTA LÍNEA AQUÍ: guardado de datos
         guardarDatos();
     }
 
@@ -1163,7 +1091,6 @@ function renderDMGTable() {
         
         ctx.clearRect(0,0,w,h);
         
-        // --- 1. Calcular Escala ---
         let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
         dmgData.points.forEach(p => {
             if(p.x < minX) minX = p.x; if(p.x > maxX) maxX = p.x;
@@ -1177,38 +1104,31 @@ function renderDMGTable() {
         const scX = (w - 40) / (maxX - minX);
         const scY = (h - 40) / (maxY - minY);
 
-        // --- 2. Dibujar Ejes ---
         ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
-        // Eje X (Y=0)
         if(minY < 0 && maxY > 0) {
             let zeroY = h - 20 - (0 - minY) * scY;
             ctx.beginPath(); ctx.moveTo(0, zeroY); ctx.lineTo(w, zeroY); ctx.stroke();
         }
-        // Eje Y (X=0)
         if(minX < 0 && maxX > 0) {
             let zeroX = 20 + (0 - minX) * scX;
             ctx.beginPath(); ctx.moveTo(zeroX, 0); ctx.lineTo(zeroX, h); ctx.stroke();
         }
 
-        // --- 3. Detectar Foco (Fila Activa) ---
         let activeIndex = -1;
         const activeInput = document.querySelector('.dmg-input:focus');
         if (activeInput) {
             activeIndex = parseInt(activeInput.getAttribute('data-row'));
         }
 
-        // --- 4. Detectar Superposición y Dibujar Puntos ---
         let superposicion = false;
         const lblsABC = ["A", "B", "C", "A'", "B'", "C'"];
         const lblsRST = ["R", "S", "T", "R'", "S'", "T'"];
         const labels = (dmgData.labelMode === 'ABC') ? lblsABC : lblsRST;
 
-        // Comprobación simple de superposición
         for(let i=0; i<dmgData.points.length; i++){
             for(let j=i+1; j<dmgData.points.length; j++){
                 let p1 = dmgData.points[i];
                 let p2 = dmgData.points[j];
-                // Si la distancia es casi 0
                 if(Math.abs(p1.x - p2.x) < 0.001 && Math.abs(p1.y - p2.y) < 0.001){
                     superposicion = true;
                 }
@@ -1219,16 +1139,14 @@ function renderDMGTable() {
             let cx = 20 + (p.x - minX) * scX;
             let cy = h - 20 - (p.y - minY) * scY;
             
-            // A) Anillo Naranja (Seleccion)
             if (index === activeIndex) {
                 ctx.beginPath();
-                ctx.strokeStyle = '#FFA500'; // Naranja HP
+                ctx.strokeStyle = '#FFA500'; 
                 ctx.lineWidth = 2;
                 ctx.arc(cx, cy, 8, 0, 2 * Math.PI); 
                 ctx.stroke();
             }
 
-            // B) Punto
             ctx.beginPath();
             let color = '#000';
             if((p.ph - 1) % 3 === 0) color = '#FF0000'; // R
@@ -1238,117 +1156,90 @@ function renderDMGTable() {
             ctx.strokeStyle = color; ctx.lineWidth = 2;
             ctx.arc(cx, cy, 4, 0, 2 * Math.PI); ctx.stroke();
             
-            // C) Etiqueta (Letra en lugar de numero)
             ctx.fillStyle = color; ctx.font = "bold 11px Consolas, monospace";
             let labelTxt = labels[p.ph - 1] || "?";
-            // Si hay subconductores en la misma fase, usamos letra simple para no saturar
-            // O podríamos añadir indices pequeños si quisieras
             ctx.fillText(labelTxt, cx + 6, cy - 6);
         });
 
-        // --- 5. Mensaje de Superposición ---
         if(superposicion) {
             ctx.fillStyle = "red";
             ctx.font = "20px Segoe UI";
-            ctx.fillText("Superposicion!", 5, h - 5);
+            ctx.fillText("Overlap!", 5, h - 5);
         }
     }
-	// ==========================================================
-    // PERSISTENCIA DE DATOS (LOCALSTORAGE)
+
+    // ==========================================================
+    // PERSISTENCIA DE DATOS 
     // ==========================================================
     
     function guardarDatos() {
-        // 1. Guardar estado de DMG
-        localStorage.setItem('cmag_dmg_data', JSON.stringify(dmgData));
-        
-        // 2. Guardar estado de RMG
-        localStorage.setItem('cmag_rmg_matrix', JSON.stringify(matrix));
-        localStorage.setItem('cmag_rmg_mode', isHexMode);
+        localStorage.setItem('cmag_dmg_data_en', JSON.stringify(dmgData));
+        localStorage.setItem('cmag_rmg_matrix_en', JSON.stringify(matrix));
+        localStorage.setItem('cmag_rmg_mode_en', isHexMode);
     }
 
     function cargarDatos() {
         try {
-            // 1. Cargar DMG
-            const savedDmg = localStorage.getItem('cmag_dmg_data');
+            const savedDmg = localStorage.getItem('cmag_dmg_data_en');
             if (savedDmg) {
                 dmgData = JSON.parse(savedDmg);
-                // Restaurar interfaz visual DMG
                 updateHeaderDisplays();
                 renderDMGTable();
-                calculateDMG(); // Esto redibuja el gráfico también
+                calculateDMG(); 
                 
-                // Restaurar botón de etiquetas (ABC/RST)
                 const textForButton = (dmgData.labelMode === 'ABC') ? 'RST' : 'ABC';
                 document.querySelector('.dmg-footer-btns .retro-btn').innerText = textForButton;
             }
 
-            // 2. Cargar RMG
-            const savedMatrix = localStorage.getItem('cmag_rmg_matrix');
-            const savedMode = localStorage.getItem('cmag_rmg_mode');
+            const savedMatrix = localStorage.getItem('cmag_rmg_matrix_en');
+            const savedMode = localStorage.getItem('cmag_rmg_mode_en');
             
             if (savedMatrix) {
                 matrix = JSON.parse(savedMatrix);
             }
             if (savedMode !== null) {
-                isHexMode = (savedMode === 'true'); // Convertir string a boolean
-                document.getElementById('headerTitle').innerText = isHexMode ? "Modo Hexagonal" : "Modo Rectangular";
+                isHexMode = (savedMode === 'true'); 
+                document.getElementById('headerTitle').innerText = isHexMode ? "Hexagonal Mode" : "Rectangular Mode";
             }
-            draw(); // Redibujar RMG
+            draw(); 
 
         } catch (e) {
-            console.error("Error cargando datos guardados:", e);
-            // Si hay error, no hacemos nada y dejamos los valores por defecto
+            console.error("Error loading saved data:", e);
         }
     }
 
-    // CARGAR AL INICIO: Ejecutamos la carga inmediatamente
     cargarDatos();
-	
-	// MODO DEMO WEB
-	// Sobrescribir el botón de "Ver Cálculos" (RMG y DMG)
-    // Buscamos todos los botones que digan "Ver Calculos" y forzamos el mensaje de venta
+    
     document.addEventListener("DOMContentLoaded", function() {
         const proButtons = document.querySelectorAll("button");
         proButtons.forEach(btn => {
-            if (btn.innerText.includes("Ver Calculos")) {
+            if (btn.innerText.includes("View Calcs")) {
                 btn.onclick = function() {
-                    if (confirm("Función disponible solo en la APP")) {
-                        // Hace scroll hasta la sección de descargas
+                    if (confirm("Pro Feature in APP")) {
                         document.querySelector('.downloads-section').scrollIntoView({behavior: 'smooth'});
                     }
                 };
             }
         });
     });
-	
-	// ==========================================================
-    // ANIMACIÓN DE INVITACIÓN (UX)
-    // ==========================================================
+    
     document.addEventListener("DOMContentLoaded", function() {
-        
-        // 1. Seleccionamos las áreas calientes
         const canvasRMG = document.getElementById('matrixCanvas');
         const containerDMG = document.getElementById('dmgContainer');
 
-        // 2. Agregamos la clase de animación
         canvasRMG.classList.add('interactive-hint');
         containerDMG.classList.add('interactive-hint');
 
-        // 3. Función para limpiar la animación al primer toque
         function removeHint(element) {
             element.classList.remove('interactive-hint');
         }
 
-        // 4. Listeners para RMG (Click o Teclado)
         canvasRMG.addEventListener('click', () => removeHint(canvasRMG), {once:true});
         canvasRMG.addEventListener('keydown', () => removeHint(canvasRMG), {once:true});
 
-        // 5. Listeners para DMG (Click dentro del contenedor)
         containerDMG.addEventListener('click', () => removeHint(containerDMG), {once:true});
-        // Si tocan un input dentro de DMG
         containerDMG.addEventListener('focusin', () => removeHint(containerDMG), {once:true});
     });
 </script>
 
-</body>
-</html>
+</body></html>
